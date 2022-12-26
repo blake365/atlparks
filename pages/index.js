@@ -13,6 +13,7 @@ export async function getStaticProps() {
 		.from('parks')
 		.select('*')
 		.eq('favorite', true)
+		.order('ID', { ascending: true })
 
 	if (error) {
 		console.log(error)
