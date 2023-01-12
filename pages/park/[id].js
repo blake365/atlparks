@@ -29,6 +29,7 @@ import {
 } from '@mantine/core'
 import { IconCheck } from '@tabler/icons'
 import { supabase } from '../../config/config'
+import { useRouter } from 'next/router'
 
 import parkPicture from '../../public/osarugue-igbinoba-xiTTfeBdbs8-unsplash.jpg'
 
@@ -113,11 +114,22 @@ export async function getStaticProps({ params }) {
 		.select('*')
 		.eq('ID', params.id)
 
+	// console.log(typeof params.id)
+
 	// console.log(error)
+	let { data: pictures, errors } = await supabase
+		.from('pictures')
+		.select()
+		.eq('park_id', parseInt(params.id))
+
+	console.log('errors', errors)
+	console.log('pictures', pictures)
+	// console.log('parkData', parkData)
 
 	return {
 		props: {
 			parkData,
+			pictures,
 		},
 	}
 }
@@ -253,9 +265,9 @@ const render = (status) => {
 	return <h1>{status}</h1>
 }
 
-const Park = ({ parkData }) => {
-	// const router = useRouter()
-	// const { id } = router.query
+const Park = ({ parkData, pictures }) => {
+	const router = useRouter()
+	const { id } = router.query
 	const { classes } = useStyles()
 
 	const [zoom, setZoom] = useState(15)
@@ -272,6 +284,8 @@ const Park = ({ parkData }) => {
 		center = { lat: park.latitude, lng: park.longitude }
 		position = { lat: park.latitude, lng: park.longitude }
 	}
+
+	console.log(pictures)
 
 	// console.log(color)
 	// console.log('component', park)
@@ -394,11 +408,18 @@ const Park = ({ parkData }) => {
 										</Group>
 									</div>
 									<Stack>
-										<Image
-											src={parkPicture}
-											alt='park picture'
-											className={classes.image}
-										/>
+										{pictures.length > 0 ? (
+											<Image
+												src={pictures[0].url}
+												alt={pictures[0].description}
+												className={classes.image}
+												width={300}
+												height={800}
+												priority
+											/>
+										) : (
+											''
+										)}
 									</Stack>
 								</div>
 							</Container>
