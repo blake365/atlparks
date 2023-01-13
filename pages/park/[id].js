@@ -10,6 +10,12 @@ import {
 } from 'react'
 
 import { createCustomEqual } from 'fast-equals'
+import {
+	IconExternalLink,
+	IconArrowRight,
+	IconArrowLeft,
+	IconThumbUp,
+} from '@tabler/icons'
 
 import {
 	createStyles,
@@ -26,6 +32,8 @@ import {
 	Stack,
 	Badge,
 	Box,
+	Spoiler,
+	ActionIcon,
 } from '@mantine/core'
 import { IconCheck } from '@tabler/icons'
 import { supabase } from '../../config/config'
@@ -122,8 +130,8 @@ export async function getStaticProps({ params }) {
 		.select()
 		.eq('park_id', parseInt(params.id))
 
-	console.log('errors', errors)
-	console.log('pictures', pictures)
+	// console.log('errors', errors)
+	// console.log('pictures', pictures)
 	// console.log('parkData', parkData)
 
 	return {
@@ -132,6 +140,18 @@ export async function getStaticProps({ params }) {
 			pictures,
 		},
 	}
+}
+
+async function updateLikes(id, currentLikes) {
+	console.log(id, currentLikes)
+	const newLikes = currentLikes + 1
+	const result = await supabase
+		.from('parks')
+		.update({ likes: newLikes })
+		.eq('ID', id)
+		.select()
+	console.log(result.data[0].likes)
+	return result.data[0].likes
 }
 
 const compileData = (data) => {
@@ -270,22 +290,30 @@ const Park = ({ parkData, pictures }) => {
 	const { id } = router.query
 	const { classes } = useStyles()
 
+	const [likes, setLikes] = useState(0)
 	const [zoom, setZoom] = useState(15)
 
 	let park = null
 	let features = null
 	let color = null
 	let center = null
-	let position = null
 	if (parkData) {
 		park = parkData[0]
 		features = compileData(park)
 		color = setColor(park)
 		center = { lat: park.latitude, lng: park.longitude }
-		position = { lat: park.latitude, lng: park.longitude }
+		// setLikes(park.likes)
 	}
 
-	console.log(pictures)
+	const handleLike = async () => {
+		//TODO: check for local storage token
+		//TODO: create token on vote to indicate already liked
+		const newLikes = await updateLikes(parseInt(id), likes)
+		console.log(newLikes)
+		setLikes(newLikes)
+	}
+
+	// console.log(pictures)
 
 	// console.log(color)
 	// console.log('component', park)
@@ -296,6 +324,42 @@ const Park = ({ parkData, pictures }) => {
 				{park && features && color ? (
 					<Box mt='lg'>
 						<div>
+							<Group position='apart' mb='sm'>
+								<Button
+									radius='sm'
+									size='sm'
+									className={classes.control}
+									component='a'
+									href={`/park/${park.ID - 1}`}
+									variant='default'
+									leftIcon={<IconArrowLeft size={18} />}
+									disabled={park.ID < 102}
+								>
+									Previous
+								</Button>
+								<Button
+									radius='sm'
+									size='sm'
+									className={classes.control}
+									variant='default'
+									rightIcon={<IconThumbUp size={22} />}
+									onClick={handleLike}
+								>
+									{likes}
+								</Button>
+								<Button
+									radius='sm'
+									size='sm'
+									className={classes.control}
+									component='a'
+									href={`/park/${park.ID + 1}`}
+									variant='default'
+									rightIcon={<IconArrowRight size={18} />}
+									disabled={park.ID > 496}
+								>
+									Next
+								</Button>
+							</Group>
 							<Container>
 								<div>
 									<Group position='apart'>
@@ -330,7 +394,9 @@ const Park = ({ parkData, pictures }) => {
 													Acres
 												</Text>
 												<Text fw='bold' fz='xl' ta='center'>
-													{Math.round(park.Acreage)}
+													{park.Acreage > 50
+														? Math.round(park.Acreage)
+														: park.Acreage}
 												</Text>
 											</Paper>
 											<Paper
@@ -369,7 +435,7 @@ const Park = ({ parkData, pictures }) => {
 											spacing='sm'
 											size='md'
 											icon={
-												<ThemeIcon size={16} radius='xl'>
+												<ThemeIcon size={16} radius='xl' color={color}>
 													<IconCheck size={12} stroke={1.5} />
 												</ThemeIcon>
 											}
@@ -388,7 +454,7 @@ const Park = ({ parkData, pictures }) => {
 										</List>
 
 										<Group mt={30}>
-											<Button
+											{/* <Button
 												variant='outline'
 												radius='sm'
 												size='md'
@@ -396,15 +462,23 @@ const Park = ({ parkData, pictures }) => {
 												className={classes.control}
 											>
 												Submit A Tip
-											</Button>
-											<Button
-												variant='default'
-												radius='sm'
-												size='md'
-												className={classes.control}
-											>
-												Park Website
-											</Button>
+											</Button> */}
+											{park.website ? (
+												<Button
+													radius='sm'
+													size='md'
+													className={classes.control}
+													component='a'
+													href={park.website}
+													variant='default'
+													rightIcon={<IconExternalLink size={20} />}
+													target='_blank'
+												>
+													Park Website
+												</Button>
+											) : (
+												''
+											)}
 										</Group>
 									</div>
 									<Stack>
@@ -418,12 +492,36 @@ const Park = ({ parkData, pictures }) => {
 												priority
 											/>
 										) : (
-											''
+											<Image
+												src={parkPicture}
+												alt='default'
+												className={classes.image}
+												width={300}
+												height={800}
+												priority
+											/>
 										)}
 									</Stack>
 								</div>
 							</Container>
-							<div>Picture Gallery</div>
+							<Text color='' size='xl' fw='bold'>
+								Photo Gallery
+							</Text>
+							<Spoiler maxHeight={300} showLabel='Show more' hideLabel='Hide'>
+								<Group>
+									{pictures.map((image) => {
+										return (
+											<Image
+												src={image.url}
+												alt='default'
+												width={300}
+												height={300}
+												key={image.id}
+											/>
+										)
+									})}
+								</Group>
+							</Spoiler>
 							<Paper
 								shadow='lg'
 								radius='md'
