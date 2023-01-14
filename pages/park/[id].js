@@ -227,6 +227,18 @@ const setColor = (data) => {
 	return color
 }
 
+const setZoom = (acres) => {
+	if (acres < 5) {
+		return 18
+	} else if (acres < 25) {
+		return 17
+	} else if (acres < 100) {
+		return 16
+	} else {
+		return 15
+	}
+}
+
 const Map = ({ onClick, onIdle, children, style, ...options }) => {
 	const ref = useRef(null)
 	const [map, setMap] = useState()
@@ -258,28 +270,28 @@ const Map = ({ onClick, onIdle, children, style, ...options }) => {
 	)
 }
 
-const Marker = (options) => {
-	const [marker, setMarker] = useState()
+// const Marker = (options) => {
+// 	const [marker, setMarker] = useState()
 
-	useEffect(() => {
-		if (!marker) {
-			setMarker(new google.maps.Marker())
-		}
+// 	useEffect(() => {
+// 		if (!marker) {
+// 			setMarker(new google.maps.Marker())
+// 		}
 
-		// remove marker from map on unmount
-		return () => {
-			if (marker) {
-				marker.setMap(null)
-			}
-		}
-	}, [marker])
-	useEffect(() => {
-		if (marker) {
-			marker.setOptions(options)
-		}
-	}, [marker, options])
-	return null
-}
+// 		// remove marker from map on unmount
+// 		return () => {
+// 			if (marker) {
+// 				marker.setMap(null)
+// 			}
+// 		}
+// 	}, [marker])
+// 	useEffect(() => {
+// 		if (marker) {
+// 			marker.setOptions(options)
+// 		}
+// 	}, [marker, options])
+// 	return null
+// }
 
 const render = (status) => {
 	return <h1>{status}</h1>
@@ -290,27 +302,67 @@ const Park = ({ parkData, pictures }) => {
 	const { id } = router.query
 	const { classes } = useStyles()
 
-	const [likes, setLikes] = useState(0)
-	const [zoom, setZoom] = useState(15)
+	const [likes, setLikes] = useState(null)
+	const [token, setToken] = useState(null)
+
+	useEffect(() => {
+		const storedToken = localStorage.getItem('AtlParkLikes')
+		if (storedToken) {
+			setToken(JSON.parse(storedToken))
+		}
+
+		const fetchLikes = async () => {
+			if (id) {
+				let { data: parks, error } = await supabase
+					.from('parks')
+					.select('likes')
+					.eq('ID', id)
+				// console.log('data', parks[0].likes)
+				console.log(error)
+				setLikes(parks[0].likes)
+			}
+		}
+		fetchLikes()
+	}, [id])
 
 	let park = null
 	let features = null
 	let color = null
 	let center = null
+	let zoom = 10
 	if (parkData) {
 		park = parkData[0]
 		features = compileData(park)
 		color = setColor(park)
 		center = { lat: park.latitude, lng: park.longitude }
 		// setLikes(park.likes)
+		zoom = setZoom(park.Acreage)
 	}
 
 	const handleLike = async () => {
-		//TODO: check for local storage token
-		//TODO: create token on vote to indicate already liked
-		const newLikes = await updateLikes(parseInt(id), likes)
-		console.log(newLikes)
-		setLikes(newLikes)
+		if (!token) {
+			const token = { likes: [id] }
+			localStorage.setItem('AtlParkLikes', JSON.stringify(token))
+			setToken(token)
+			const newLikes = await updateLikes(parseInt(id), likes)
+			console.log(newLikes)
+			setLikes(newLikes)
+		} else if (!token.likes.includes(id)) {
+			const updateToken = (token) => {
+				token = {
+					likes: [...token.likes, id],
+				}
+				return token
+			}
+			let newToken = updateToken(token)
+			localStorage.setItem('AtlParkLikes', JSON.stringify(newToken))
+			setToken(newToken)
+			const newLikes = await updateLikes(parseInt(id), likes)
+			console.log(newLikes)
+			setLikes(newLikes)
+		} else {
+			return
+		}
 	}
 
 	// console.log(pictures)
@@ -323,7 +375,7 @@ const Park = ({ parkData, pictures }) => {
 			<main className='flex flex-col items-center justify-center flex-1 pb-0 min-h-100'>
 				{park && features && color ? (
 					<Box mt='lg'>
-						<div>
+						<Container>
 							<Group position='apart' mb='sm'>
 								<Button
 									radius='sm'
@@ -340,10 +392,12 @@ const Park = ({ parkData, pictures }) => {
 								<Button
 									radius='sm'
 									size='sm'
+									px='sm'
 									className={classes.control}
 									variant='default'
-									rightIcon={<IconThumbUp size={22} />}
+									rightIcon={<IconThumbUp size={20} />}
 									onClick={handleLike}
+									c={token?.likes.includes(id) ? 'blue' : 'black'}
 								>
 									{likes}
 								</Button>
@@ -360,101 +414,101 @@ const Park = ({ parkData, pictures }) => {
 									Next
 								</Button>
 							</Group>
-							<Container>
-								<div>
-									<Group position='apart'>
-										<Title
-											variant='gradient'
-											gradient={{ from: color, to: 'gray', deg: 135 }}
-											// gradient={{ from: 'indigo', to: 'cyan', deg: 45 }}
-											// fz={50}
-											// fw={700}
-											className={classes.title}
-										>
-											{park.Name}{' '}
-										</Title>
-										<Badge color={color} variant='outline'>
-											{park.Classification}
-										</Badge>
-									</Group>
-									<Text color='dimmed' mt='md'>
-										{park.Address}
-									</Text>
-								</div>
-								<div className={classes.inner}>
-									<div className={classes.content}>
-										<Group position='center' spacing='sm' align='center'>
-											<Paper
-												shadow='sm'
-												p='sm'
-												withBorder
-												className={classes.pages}
-											>
-												<Text c='dimmed' ta='center'>
-													Acres
-												</Text>
-												<Text fw='bold' fz='xl' ta='center'>
-													{park.Acreage > 50
-														? Math.round(park.Acreage)
-														: park.Acreage}
-												</Text>
-											</Paper>
-											<Paper
-												shadow='sm'
-												p='sm'
-												withBorder
-												className={classes.pages}
-											>
-												<Text c='dimmed' ta='center'>
-													District
-												</Text>
-												<Text fw='bold' fz='xl' ta='center'>
-													{park.Council_District}
-												</Text>
-											</Paper>
-											<Paper
-												shadow='sm'
-												p='sm'
-												withBorder
-												className={classes.pages}
-											>
-												<Text c='dimmed' ta='center'>
-													NPU
-												</Text>
-												<Text fw='bold' fz='xl' ta='center'>
-													{park.NPU}
-												</Text>
-											</Paper>
-										</Group>
-										<Text color='' mt='md'>
-											{park.description}
-										</Text>
 
-										<List
-											mt={30}
-											spacing='sm'
-											size='md'
-											icon={
-												<ThemeIcon size={16} radius='xl' color={color}>
-													<IconCheck size={12} stroke={1.5} />
-												</ThemeIcon>
-											}
+							<div>
+								<Group position='apart'>
+									<Title
+										variant='gradient'
+										gradient={{ from: color, to: 'gray', deg: 135 }}
+										// gradient={{ from: 'indigo', to: 'cyan', deg: 45 }}
+										// fz={50}
+										// fw={700}
+										className={classes.title}
+									>
+										{park.Name}{' '}
+									</Title>
+									<Badge color={color} variant='outline'>
+										{park.Classification}
+									</Badge>
+								</Group>
+								<Text color='dimmed' mt='md'>
+									{park.Address}
+								</Text>
+							</div>
+							<div className={classes.inner}>
+								<div className={classes.content}>
+									<Group position='center' spacing='sm' align='center'>
+										<Paper
+											shadow='sm'
+											p='sm'
+											withBorder
+											className={classes.pages}
 										>
-											<Text color='' size='lg' fw='bold' mb='md'>
-												Amenities:
+											<Text c='dimmed' ta='center'>
+												Acres
 											</Text>
-											{features.map((item, index) => (
-												<List.Item key={index}>{item}</List.Item>
-											))}
-											{features.length === 0 && (
-												<Text color='red' size='sm'>
-													Amenities not added yet
-												</Text>
-											)}
-										</List>
+											<Text fw='bold' fz='xl' ta='center'>
+												{park.Acreage > 50
+													? Math.round(park.Acreage)
+													: park.Acreage}
+											</Text>
+										</Paper>
+										<Paper
+											shadow='sm'
+											p='sm'
+											withBorder
+											className={classes.pages}
+										>
+											<Text c='dimmed' ta='center'>
+												District
+											</Text>
+											<Text fw='bold' fz='xl' ta='center'>
+												{park.Council_District}
+											</Text>
+										</Paper>
+										<Paper
+											shadow='sm'
+											p='sm'
+											withBorder
+											className={classes.pages}
+										>
+											<Text c='dimmed' ta='center'>
+												NPU
+											</Text>
+											<Text fw='bold' fz='xl' ta='center'>
+												{park.NPU}
+											</Text>
+										</Paper>
+									</Group>
+									<Text color='' mt='md'>
+										{park.description}
+									</Text>
 
-										<Group mt={30}>
-											{/* <Button
+									<List
+										mt={30}
+										spacing='sm'
+										size='md'
+										icon={
+											<ThemeIcon size={16} radius='xl' color={color}>
+												<IconCheck size={12} stroke={1.5} />
+											</ThemeIcon>
+										}
+									>
+										<Text color='' size='lg' fw='bold' mb='md'>
+											Amenities:
+										</Text>
+										{features.map((item, index) => (
+											<List.Item key={index}>{item}</List.Item>
+										))}
+										{features.length === 0 && (
+											<Text color='red' size='sm'>
+												Amenities not added yet
+											</Text>
+										)}
+									</List>
+
+									<Group mt={30}>
+										{/* <Button
 												variant='outline'
 												radius='sm'
 												size='md'
@@ -463,47 +517,47 @@ const Park = ({ parkData, pictures }) => {
 											>
 												Submit A Tip
 											</Button> */}
-											{park.website ? (
-												<Button
-													radius='sm'
-													size='md'
-													className={classes.control}
-													component='a'
-													href={park.website}
-													variant='default'
-													rightIcon={<IconExternalLink size={20} />}
-													target='_blank'
-												>
-													Park Website
-												</Button>
-											) : (
-												''
-											)}
-										</Group>
-									</div>
-									<Stack>
-										{pictures.length > 0 ? (
-											<Image
-												src={pictures[0].url}
-												alt={pictures[0].description}
-												className={classes.image}
-												width={300}
-												height={800}
-												priority
-											/>
+										{park.website ? (
+											<Button
+												radius='sm'
+												size='md'
+												className={classes.control}
+												component='a'
+												href={park.website}
+												variant='default'
+												rightIcon={<IconExternalLink size={20} />}
+												target='_blank'
+											>
+												Park Website
+											</Button>
 										) : (
-											<Image
-												src={parkPicture}
-												alt='default'
-												className={classes.image}
-												width={300}
-												height={800}
-												priority
-											/>
+											''
 										)}
-									</Stack>
+									</Group>
 								</div>
-							</Container>
+								<Stack>
+									{pictures.length > 0 ? (
+										<Image
+											src={pictures[0].url}
+											alt={pictures[0].description}
+											className={classes.image}
+											width={300}
+											height={800}
+											priority
+										/>
+									) : (
+										<Image
+											src={parkPicture}
+											alt='default'
+											className={classes.image}
+											width={300}
+											height={800}
+											priority
+										/>
+									)}
+								</Stack>
+							</div>
+
 							<Text color='' size='xl' fw='bold'>
 								Photo Gallery
 							</Text>
@@ -544,7 +598,7 @@ const Park = ({ parkData, pictures }) => {
 									></Map>
 								</Wrapper>
 							</Paper>
-						</div>
+						</Container>
 					</Box>
 				) : (
 					<Loader size='xl' variant='dots' mt='lg' />
