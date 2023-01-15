@@ -1,4 +1,4 @@
-import { Wrapper, Status } from '@googlemaps/react-wrapper'
+import { Wrapper } from '@googlemaps/react-wrapper'
 import Image from 'next/image'
 import {
 	useRef,
@@ -19,7 +19,6 @@ import {
 
 import {
 	createStyles,
-	// Image,
 	Container,
 	Title,
 	Button,
@@ -33,7 +32,6 @@ import {
 	Badge,
 	Box,
 	Spoiler,
-	ActionIcon,
 } from '@mantine/core'
 import { IconCheck } from '@tabler/icons'
 import { supabase } from '../../config/config'
@@ -134,6 +132,15 @@ export async function getStaticProps({ params }) {
 	// console.log('pictures', pictures)
 	// console.log('parkData', parkData)
 
+	if (!parkData) {
+		return {
+			redirect: {
+				destination: '/',
+				permanent: false,
+			},
+		}
+	}
+
 	return {
 		props: {
 			parkData,
@@ -150,7 +157,7 @@ async function updateLikes(id, currentLikes) {
 		.update({ likes: newLikes })
 		.eq('ID', id)
 		.select()
-	console.log(result.data[0].likes)
+	// console.log(result.data[0].likes)
 	return result.data[0].likes
 }
 
