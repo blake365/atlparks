@@ -132,14 +132,14 @@ export async function getStaticProps({ params }) {
 	// console.log('pictures', pictures)
 	// console.log('parkData', parkData)
 
-	if (!parkData) {
-		return {
-			redirect: {
-				destination: '/',
-				permanent: false,
-			},
-		}
-	}
+	// if (!parkData) {
+	// 	return {
+	// 		redirect: {
+	// 			destination: '/',
+	// 			permanent: false,
+	// 		},
+	// 	}
+	// }
 
 	return {
 		props: {
