@@ -1,15 +1,8 @@
 import { Wrapper } from '@googlemaps/react-wrapper'
 import Image from 'next/image'
-import {
-	useRef,
-	useEffect,
-	useState,
-	isValidElement,
-	Children,
-	cloneElement,
-} from 'react'
+import { useEffect, useState, useLayoutEffect } from 'react'
 
-import { createCustomEqual } from 'fast-equals'
+import GMap from '../../components/map'
 import {
 	IconExternalLink,
 	IconArrowRight,
@@ -37,7 +30,7 @@ import { IconCheck } from '@tabler/icons'
 import { supabase } from '../../config/config'
 import { useRouter } from 'next/router'
 
-import parkPicture from '../../public/osarugue-igbinoba-xiTTfeBdbs8-unsplash.jpg'
+import parkPicture from '../../public/placeholder.png'
 
 const useStyles = createStyles((theme) => ({
 	inner: {
@@ -150,7 +143,7 @@ export async function getStaticProps({ params }) {
 }
 
 async function updateLikes(id, currentLikes) {
-	console.log(id, currentLikes)
+	// console.log(id, currentLikes)
 	const newLikes = currentLikes + 1
 	const result = await supabase
 		.from('parks')
@@ -246,60 +239,6 @@ const setZoom = (acres) => {
 	}
 }
 
-const Map = ({ onClick, onIdle, children, style, ...options }) => {
-	const ref = useRef(null)
-	const [map, setMap] = useState()
-
-	useEffect(() => {
-		if (ref.current && !map) {
-			setMap(new window.google.maps.Map(ref.current, {}))
-		}
-	}, [ref, map])
-
-	// because React does not do deep comparisons, a custom hook is used
-	useDeepCompareEffectForMaps(() => {
-		if (map) {
-			map.setOptions(options)
-		}
-	}, [map, options])
-
-	return (
-		<>
-			<div ref={ref} style={style} />
-			{Children.map(children, (child) => {
-				if (isValidElement(child)) {
-					// set the map prop on the child component
-					// @ts-ignore
-					return cloneElement(child, { map })
-				}
-			})}
-		</>
-	)
-}
-
-// const Marker = (options) => {
-// 	const [marker, setMarker] = useState()
-
-// 	useEffect(() => {
-// 		if (!marker) {
-// 			setMarker(new google.maps.Marker())
-// 		}
-
-// 		// remove marker from map on unmount
-// 		return () => {
-// 			if (marker) {
-// 				marker.setMap(null)
-// 			}
-// 		}
-// 	}, [marker])
-// 	useEffect(() => {
-// 		if (marker) {
-// 			marker.setOptions(options)
-// 		}
-// 	}, [marker, options])
-// 	return null
-// }
-
 const render = (status) => {
 	return <h1>{status}</h1>
 }
@@ -311,6 +250,21 @@ const Park = ({ parkData, pictures }) => {
 
 	const [likes, setLikes] = useState(null)
 	const [token, setToken] = useState(null)
+
+	let park = null
+	let features = null
+	let color = null
+	let center = null
+	let zoom = 10
+
+	if (parkData) {
+		park = parkData[0]
+		features = compileData(park)
+		color = setColor(park)
+		center = { lat: park.latitude, lng: park.longitude }
+		// setLikes(park.likes)
+		zoom = setZoom(park.Acreage)
+	}
 
 	useEffect(() => {
 		const storedToken = localStorage.getItem('AtlParkLikes')
@@ -332,19 +286,21 @@ const Park = ({ parkData, pictures }) => {
 		fetchLikes()
 	}, [id])
 
-	let park = null
-	let features = null
-	let color = null
-	let center = null
-	let zoom = 10
-	if (parkData) {
-		park = parkData[0]
-		features = compileData(park)
-		color = setColor(park)
-		center = { lat: park.latitude, lng: park.longitude }
-		// setLikes(park.likes)
-		zoom = setZoom(park.Acreage)
-	}
+	useEffect(() => {
+		const fetchNearby = async () => {
+			if (park) {
+				const { data, error } = await supabase.rpc('nearby_parks', {
+					lat: parkData[0].latitude,
+					long: parkData[0].longitude,
+				})
+				console.log(error)
+				console.log(data)
+				return data
+			}
+		}
+		fetchNearby()
+		return () => {}
+	}, [park])
 
 	const handleLike = async () => {
 		if (!token) {
@@ -352,7 +308,7 @@ const Park = ({ parkData, pictures }) => {
 			localStorage.setItem('AtlParkLikes', JSON.stringify(token))
 			setToken(token)
 			const newLikes = await updateLikes(parseInt(id), likes)
-			console.log(newLikes)
+			// console.log(newLikes)
 			setLikes(newLikes)
 		} else if (!token.likes.includes(id)) {
 			const updateToken = (token) => {
@@ -365,157 +321,151 @@ const Park = ({ parkData, pictures }) => {
 			localStorage.setItem('AtlParkLikes', JSON.stringify(newToken))
 			setToken(newToken)
 			const newLikes = await updateLikes(parseInt(id), likes)
-			console.log(newLikes)
+			// console.log(newLikes)
 			setLikes(newLikes)
 		} else {
 			return
 		}
 	}
 
-	// console.log(pictures)
-
-	// console.log(color)
-	// console.log('component', park)
-
 	return (
 		<div className='pt-0 pb-8'>
-			<main className='flex flex-col items-center justify-center flex-1 pb-0 min-h-100'>
-				{park && features && color ? (
-					<Box mt='lg'>
-						<Container>
-							<Group position='apart' mb='sm'>
-								<Button
-									radius='sm'
-									size='sm'
-									className={classes.control}
-									component='a'
-									href={`/park/${park.ID - 1}`}
-									variant='default'
-									leftIcon={<IconArrowLeft size={18} />}
-									disabled={park.ID < 102}
+			{park && features && color ? (
+				<Box mt='lg'>
+					<Container>
+						<Group position='apart' mb='sm'>
+							<Button
+								radius='sm'
+								size='sm'
+								className={classes.control}
+								component='a'
+								href={`/park/${park.ID - 1}`}
+								variant='default'
+								leftIcon={<IconArrowLeft size={18} />}
+								disabled={park.ID < 102}
+							>
+								Previous
+							</Button>
+							<Button
+								radius='sm'
+								size='sm'
+								px='sm'
+								className={classes.control}
+								variant='default'
+								rightIcon={<IconThumbUp size={20} />}
+								onClick={handleLike}
+								c={token?.likes.includes(id) ? 'blue' : 'black'}
+							>
+								{likes}
+							</Button>
+							<Button
+								radius='sm'
+								size='sm'
+								className={classes.control}
+								component='a'
+								href={`/park/${park.ID + 1}`}
+								variant='default'
+								rightIcon={<IconArrowRight size={18} />}
+								disabled={park.ID > 496}
+							>
+								Next
+							</Button>
+						</Group>
+
+						<div>
+							<Group position='apart'>
+								<Title
+									variant='gradient'
+									gradient={{ from: color, to: 'gray', deg: 135 }}
+									// gradient={{ from: 'indigo', to: 'cyan', deg: 45 }}
+									// fz={50}
+									// fw={700}
+									className={classes.title}
 								>
-									Previous
-								</Button>
-								<Button
-									radius='sm'
-									size='sm'
-									px='sm'
-									className={classes.control}
-									variant='default'
-									rightIcon={<IconThumbUp size={20} />}
-									onClick={handleLike}
-									c={token?.likes.includes(id) ? 'blue' : 'black'}
-								>
-									{likes}
-								</Button>
-								<Button
-									radius='sm'
-									size='sm'
-									className={classes.control}
-									component='a'
-									href={`/park/${park.ID + 1}`}
-									variant='default'
-									rightIcon={<IconArrowRight size={18} />}
-									disabled={park.ID > 496}
-								>
-									Next
-								</Button>
+									{park.Name}{' '}
+								</Title>
+								<Badge color={color} variant='outline'>
+									{park.Classification}
+								</Badge>
 							</Group>
-
-							<div>
-								<Group position='apart'>
-									<Title
-										variant='gradient'
-										gradient={{ from: color, to: 'gray', deg: 135 }}
-										// gradient={{ from: 'indigo', to: 'cyan', deg: 45 }}
-										// fz={50}
-										// fw={700}
-										className={classes.title}
+							<Text color='dimmed' mt='md'>
+								{park.Address}
+							</Text>
+						</div>
+						<div className={classes.inner}>
+							<div className={classes.content}>
+								<Group position='center' spacing='sm' align='center'>
+									<Paper
+										shadow='sm'
+										p='sm'
+										withBorder
+										className={classes.pages}
 									>
-										{park.Name}{' '}
-									</Title>
-									<Badge color={color} variant='outline'>
-										{park.Classification}
-									</Badge>
-								</Group>
-								<Text color='dimmed' mt='md'>
-									{park.Address}
-								</Text>
-							</div>
-							<div className={classes.inner}>
-								<div className={classes.content}>
-									<Group position='center' spacing='sm' align='center'>
-										<Paper
-											shadow='sm'
-											p='sm'
-											withBorder
-											className={classes.pages}
-										>
-											<Text c='dimmed' ta='center'>
-												Acres
-											</Text>
-											<Text fw='bold' fz='xl' ta='center'>
-												{park.Acreage > 50
-													? Math.round(park.Acreage)
-													: park.Acreage}
-											</Text>
-										</Paper>
-										<Paper
-											shadow='sm'
-											p='sm'
-											withBorder
-											className={classes.pages}
-										>
-											<Text c='dimmed' ta='center'>
-												District
-											</Text>
-											<Text fw='bold' fz='xl' ta='center'>
-												{park.Council_District}
-											</Text>
-										</Paper>
-										<Paper
-											shadow='sm'
-											p='sm'
-											withBorder
-											className={classes.pages}
-										>
-											<Text c='dimmed' ta='center'>
-												NPU
-											</Text>
-											<Text fw='bold' fz='xl' ta='center'>
-												{park.NPU}
-											</Text>
-										</Paper>
-									</Group>
-									<Text color='' mt='md'>
-										{park.description}
-									</Text>
-
-									<List
-										mt={30}
-										spacing='sm'
-										size='md'
-										icon={
-											<ThemeIcon size={16} radius='xl' color={color}>
-												<IconCheck size={12} stroke={1.5} />
-											</ThemeIcon>
-										}
-									>
-										<Text color='' size='lg' fw='bold' mb='md'>
-											Amenities:
+										<Text c='dimmed' ta='center'>
+											Acres
 										</Text>
-										{features.map((item, index) => (
-											<List.Item key={index}>{item}</List.Item>
-										))}
-										{features.length === 0 && (
-											<Text color='red' size='sm'>
-												Amenities not added yet
-											</Text>
-										)}
-									</List>
+										<Text fw='bold' fz='xl' ta='center'>
+											{park.Acreage > 50
+												? Math.round(park.Acreage)
+												: park.Acreage}
+										</Text>
+									</Paper>
+									<Paper
+										shadow='sm'
+										p='sm'
+										withBorder
+										className={classes.pages}
+									>
+										<Text c='dimmed' ta='center'>
+											District
+										</Text>
+										<Text fw='bold' fz='xl' ta='center'>
+											{park.Council_District}
+										</Text>
+									</Paper>
+									<Paper
+										shadow='sm'
+										p='sm'
+										withBorder
+										className={classes.pages}
+									>
+										<Text c='dimmed' ta='center'>
+											NPU
+										</Text>
+										<Text fw='bold' fz='xl' ta='center'>
+											{park.NPU}
+										</Text>
+									</Paper>
+								</Group>
+								<Text color='' mt='md'>
+									{park.description}
+								</Text>
 
-									<Group mt={30}>
-										{/* <Button
+								<List
+									mt={30}
+									spacing='sm'
+									size='md'
+									icon={
+										<ThemeIcon size={16} radius='xl' color={color}>
+											<IconCheck size={12} stroke={1.5} />
+										</ThemeIcon>
+									}
+								>
+									<Text color='' size='lg' fw='bold' mb='md'>
+										Amenities:
+									</Text>
+									{features.map((item, index) => (
+										<List.Item key={index}>{item}</List.Item>
+									))}
+									{features.length === 0 && (
+										<Text color='red' size='sm'>
+											No Amenities
+										</Text>
+									)}
+								</List>
+
+								<Group mt={30}>
+									{/* <Button
 												variant='outline'
 												radius='sm'
 												size='md'
@@ -524,125 +474,92 @@ const Park = ({ parkData, pictures }) => {
 											>
 												Submit A Tip
 											</Button> */}
-										{park.website ? (
-											<Button
-												radius='sm'
-												size='md'
-												className={classes.control}
-												component='a'
-												href={park.website}
-												variant='default'
-												rightIcon={<IconExternalLink size={20} />}
-												target='_blank'
-											>
-												Park Website
-											</Button>
-										) : (
-											''
-										)}
-									</Group>
-								</div>
-								<Stack>
-									{pictures.length > 0 ? (
-										<Image
-											src={pictures[0].url}
-											alt={pictures[0].description}
-											className={classes.image}
-											width={300}
-											height={800}
-											priority
-										/>
+									{park.website ? (
+										<Button
+											radius='sm'
+											size='md'
+											className={classes.control}
+											component='a'
+											href={park.website}
+											variant='default'
+											rightIcon={<IconExternalLink size={20} />}
+											target='_blank'
+										>
+											Park Website
+										</Button>
 									) : (
-										<Image
-											src={parkPicture}
-											alt='default'
-											className={classes.image}
-											width={300}
-											height={800}
-											priority
-										/>
+										''
 									)}
-								</Stack>
+								</Group>
 							</div>
+							<Stack>
+								{pictures.length > 0 ? (
+									<Image
+										src={pictures[0].url}
+										alt={pictures[0].description}
+										className={classes.image}
+										width={300}
+										height={800}
+										priority
+									/>
+								) : (
+									<Image
+										src={parkPicture}
+										alt='default'
+										className={classes.image}
+										width={300}
+										height={800}
+										priority
+									/>
+								)}
+							</Stack>
+						</div>
 
+						{pictures.length > 1 && (
 							<Text color='' size='xl' fw='bold'>
 								Photo Gallery
 							</Text>
-							<Spoiler maxHeight={300} showLabel='Show more' hideLabel='Hide'>
-								<Group>
-									{pictures.map((image) => {
-										return (
-											<Image
-												src={image.url}
-												alt='default'
-												width={300}
-												height={300}
-												key={image.id}
-											/>
-										)
-									})}
-								</Group>
-							</Spoiler>
-							<Paper
-								shadow='lg'
-								radius='md'
-								m='md'
-								withBorder
-								style={{ display: 'flex', height: '400px' }}
-							>
-								<Wrapper
-									apiKey={process.env.NEXT_PUBLIC_MAPSAPI}
-									render={render}
-								>
-									<Map
-										center={center}
-										zoom={zoom}
-										style={{
-											height: '100%',
-											flexGrow: 1,
-											borderRadius: 10,
-										}}
-									></Map>
-								</Wrapper>
-							</Paper>
-						</Container>
-					</Box>
-				) : (
-					<Loader size='xl' variant='dots' mt='lg' />
-				)}
-			</main>
+						)}
+						<Spoiler maxHeight={300} showLabel='Show more' hideLabel='Hide'>
+							<Group>
+								{pictures.map((image) => {
+									return (
+										<Image
+											src={image.url}
+											alt='default'
+											width={300}
+											height={300}
+											key={image.id}
+										/>
+									)
+								})}
+							</Group>
+						</Spoiler>
+						<Paper
+							shadow='lg'
+							radius='md'
+							withBorder
+							style={{ display: 'flex', height: '400px' }}
+						>
+							<Wrapper apiKey={process.env.NEXT_PUBLIC_MAPSAPI} render={render}>
+								<GMap
+									center={center}
+									zoom={zoom}
+									style={{
+										height: '100%',
+										flexGrow: 1,
+										borderRadius: 10,
+									}}
+								></GMap>
+							</Wrapper>
+						</Paper>
+					</Container>
+				</Box>
+			) : (
+				<Loader size='xl' variant='dots' mt='lg' />
+			)}
 		</div>
 	)
 }
 
 export default Park
-
-const deepCompareEqualsForMaps = createCustomEqual((deepEqual) => (a, b) => {
-	if (
-		isLatLngLiteral(a) ||
-		a instanceof google.maps.LatLng ||
-		isLatLngLiteral(b) ||
-		b instanceof google.maps.LatLng
-	) {
-		return new google.maps.LatLng(a).equals(new google.maps.LatLng(b))
-	}
-
-	// TODO extend to other types
-
-	// use fast-equals for other objects
-	return deepEqual(a, b)
-})
-
-function useDeepCompareMemoize(value) {
-	const ref = useRef()
-
-	if (!deepCompareEqualsForMaps(value, ref.current)) {
-		ref.current = value
-	}
-
-	return ref.current
-}
-
-function useDeepCompareEffectForMaps(callback, dependencies) {
-	useEffect(callback, dependencies.map(useDeepCompareMemoize))
-}
