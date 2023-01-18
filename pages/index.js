@@ -21,7 +21,7 @@ export async function getStaticProps() {
 		.order('ID', { ascending: true })
 
 	if (error) {
-		console.log(error)
+		// console.log(error)
 	}
 
 	return {
@@ -53,7 +53,7 @@ export default function Home({ parks }) {
 
 	useEffect(() => {
 		const filtered = parks.filter((item) => item.Name === search)
-		console.log(filtered)
+		// console.log(filtered)
 		if (filtered.length > 0) {
 			setSearchID(filtered[0].ID)
 		}
@@ -67,7 +67,7 @@ export default function Home({ parks }) {
 				<link rel='icon' href='/favicon.ico' />
 			</Head>
 
-			<main className='flex flex-col items-center justify-center flex-1 pt-4 pb-0 min-h-100'>
+			<main className='flex flex-col items-center justify-center flex-1 w-11/12 pt-4 pb-4 mx-auto min-h-100'>
 				<Group align='end'>
 					<Autocomplete
 						label='Find A Park'
@@ -85,14 +85,14 @@ export default function Home({ parks }) {
 					</Button>
 				</Group>
 				<h1>Featured Parks</h1>
-				<div className='flex flex-wrap items-center justify-center max-w-2xl mb-8'>
+				<div className='flex flex-wrap items-center justify-center max-w-[960px] mb-8'>
 					{parks.map((park) => {
 						if (park.favorite) {
 							return <Card park={park} key={park.ID} />
 						}
 					})}
 				</div>
-				<div>Map of all ATL park locations?</div>
+				{/* <div>Map of all ATL park locations?</div> */}
 				<Paper
 					shadow='lg'
 					radius='md'

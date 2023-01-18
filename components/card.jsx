@@ -19,7 +19,7 @@ export default function Card({ park })
     ]
 
     return (
-        <div className="p-2 m-2 transition-transform border rounded-sm w-80 hover:scale-102 h-84 hover:bg-slate-200 bg-slate-100">
+        <div className="p-2 m-2 transition-transform border rounded-sm sm:w-64 w-84 hover:scale-102 h-84 hover:bg-slate-200 bg-slate-100">
             <Link
                 href={`/park/${park.ID}`}
             >

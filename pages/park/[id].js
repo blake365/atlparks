@@ -1,6 +1,6 @@
 import { Wrapper } from '@googlemaps/react-wrapper'
 import Image from 'next/image'
-import { useEffect, useState, useLayoutEffect } from 'react'
+import { useEffect, useState, useRef } from 'react'
 
 import GMap from '../../components/map'
 import {
@@ -25,12 +25,17 @@ import {
 	Badge,
 	Box,
 	Spoiler,
+	Center,
 } from '@mantine/core'
 import { IconCheck } from '@tabler/icons'
 import { supabase } from '../../config/config'
 import { useRouter } from 'next/router'
 
 import parkPicture from '../../public/placeholder.png'
+import Card from '../../components/card'
+import Marker from '../../components/marker'
+
+import { Classifications } from '../../config/classifications'
 
 const useStyles = createStyles((theme) => ({
 	inner: {
@@ -187,6 +192,18 @@ const compileData = (data) => {
 	return output
 }
 
+const processClass = (string) => {
+	const searchWords = string.split(' ')
+	for (let key in Classifications) {
+		for (let i = 0; i < searchWords.length; i++) {
+			if (key.toLowerCase().includes(searchWords[i].toLowerCase())) {
+				return Classifications[key]
+			}
+		}
+	}
+	return undefined
+}
+
 const setColor = (data) => {
 	let color
 	switch (data.Classification) {
@@ -250,6 +267,13 @@ const Park = ({ parkData, pictures }) => {
 
 	const [likes, setLikes] = useState(null)
 	const [token, setToken] = useState(null)
+	const [nearby, setNearby] = useState([])
+
+	const mapRef = useRef(null)
+
+	const handleAddressClick = () => {
+		mapRef.current.scrollIntoView({ behavior: 'smooth' })
+	}
 
 	let park = null
 	let features = null
@@ -279,7 +303,7 @@ const Park = ({ parkData, pictures }) => {
 					.select('likes')
 					.eq('ID', id)
 				// console.log('data', parks[0].likes)
-				console.log(error)
+				// console.log(error)
 				setLikes(parks[0].likes)
 			}
 		}
@@ -288,19 +312,22 @@ const Park = ({ parkData, pictures }) => {
 
 	useEffect(() => {
 		const fetchNearby = async () => {
-			if (park) {
-				const { data, error } = await supabase.rpc('nearby_parks', {
-					lat: parkData[0].latitude,
-					long: parkData[0].longitude,
-				})
-				console.log(error)
-				console.log(data)
-				return data
-			}
+			const { data, error } = await supabase.rpc('nearby_parks', {
+				lat: parkData[0].latitude,
+				long: parkData[0].longitude,
+			})
+			// console.log(error)
+			// console.log(data)
+			return data
 		}
-		fetchNearby()
-		return () => {}
+
+		if (park) {
+			fetchNearby().then((data) => setNearby(data))
+		}
+		// return setNearby(fetchNearby().slice(2))
 	}, [park])
+
+	// console.log(nearby)
 
 	const handleLike = async () => {
 		if (!token) {
@@ -388,7 +415,12 @@ const Park = ({ parkData, pictures }) => {
 									{park.Classification}
 								</Badge>
 							</Group>
-							<Text color='dimmed' mt='md'>
+							<Text
+								color='dimmed'
+								mt='md'
+								className='hover:underline'
+								onClick={handleAddressClick}
+							>
 								{park.Address}
 							</Text>
 						</div>
@@ -463,6 +495,10 @@ const Park = ({ parkData, pictures }) => {
 										</Text>
 									)}
 								</List>
+
+								<Text color='' mt='md'>
+									{processClass(park.Classification)}
+								</Text>
 
 								<Group mt={30}>
 									{/* <Button
@@ -540,6 +576,7 @@ const Park = ({ parkData, pictures }) => {
 							radius='md'
 							withBorder
 							style={{ display: 'flex', height: '400px' }}
+							ref={mapRef}
 						>
 							<Wrapper apiKey={process.env.NEXT_PUBLIC_MAPSAPI} render={render}>
 								<GMap
@@ -550,13 +587,33 @@ const Park = ({ parkData, pictures }) => {
 										flexGrow: 1,
 										borderRadius: 10,
 									}}
-								></GMap>
+								>
+									<Marker
+										position={{ lat: park.latitude, lng: park.longitude }}
+										title={park.Name}
+									/>
+								</GMap>
 							</Wrapper>
 						</Paper>
+						{nearby.length > 0 ? (
+							<Title align='center' mt='lg' pt='lg'>
+								Nearby Parks
+							</Title>
+						) : (
+							''
+						)}
+						<Group position='center'>
+							{nearby.length > 0 &&
+								nearby.map((park) => {
+									return <Card park={park} key={park.ID} />
+								})}
+						</Group>
 					</Container>
 				</Box>
 			) : (
-				<Loader size='xl' variant='dots' mt='lg' />
+				<Center>
+					<Loader size='xl' variant='dots' mt='lg' />
+				</Center>
 			)}
 		</div>
 	)
