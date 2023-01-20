@@ -29,10 +29,10 @@ const useStyles = createStyles((theme) => ({
 	content: {
 		paddingTop: 0,
 		position: 'relative',
-		zIndex: 1,
+		zIndex: 0,
 
 		[theme.fn.smallerThan('sm')]: {
-			paddingTop: 120,
+			paddingTop: 0,
 		},
 	},
 
@@ -55,30 +55,28 @@ const useStyles = createStyles((theme) => ({
 	},
 }))
 
-export default function NothingFoundBackground() {
+export default function About() {
 	const { classes } = useStyles()
 
 	return (
 		<Container className={classes.root}>
 			<div className={classes.inner}>
 				<div className={classes.content}>
-					<Title className={classes.title}>404</Title>
-					<Title className={classes.title}>Nothing here</Title>
+					<Title className={classes.title}>Atlanta Parks Database</Title>
 					<Text
 						color='dimmed'
 						size='lg'
 						align='center'
 						className={classes.description}
 					>
-						Page you are trying to open does not exist. You may have mistyped
-						the address, or the page has been moved to another URL. If you think
-						this is an error contact support.
+						This site is intended to be a resource for the people of Atlanta.
+						This site is not affiliated with the city nor any government entity.
+						The information provided on this site is a combination of publicly
+						available data provided by the City of Atlanta and information
+						gathered through research and visiting the many wonderful parks the
+						city has to offer. Information provided here may be incomplete or
+						inaccurate.
 					</Text>
-					<Group position='center'>
-						<Button component='a' href='/' size='md'>
-							Take me home
-						</Button>
-					</Group>
 				</div>
 			</div>
 		</Container>

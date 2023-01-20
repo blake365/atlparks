@@ -1,18 +1,23 @@
 import '../styles/globals.css'
 
-import { AppProps } from 'next/app'
-import { MantineProvider } from '@mantine/core'
+import { MantineProvider, createEmotionCache } from '@mantine/core'
 import { HeaderResponsive } from '../components/navbar'
+
+const myCache = createEmotionCache({
+	key: 'mantine',
+	prepend: false,
+})
 
 function MyApp({ Component, pageProps }) {
 	return (
 		<>
 			<MantineProvider
+				emotionCache={myCache}
 				withGlobalStyles
 				withNormalizeCSS
 				theme={{
-					primaryColor: 'red',
-					primaryShade: 8,
+					primaryColor: 'blue',
+					primaryShade: 7,
 					colorScheme: 'light',
 				}}
 			>
@@ -20,7 +25,7 @@ function MyApp({ Component, pageProps }) {
 					links={[
 						{ link: '/about', label: 'About' },
 						{ link: '/search', label: 'Find a Park' },
-						{ link: '/feedback', label: 'Help Out' },
+						{ link: '/contribute', label: 'Contribute' },
 					]}
 				/>
 				<Component {...pageProps} />

@@ -36,13 +36,17 @@ import Card from '../../components/card'
 import Marker from '../../components/marker'
 
 import { Classifications } from '../../config/classifications'
+import Feedback from '../../components/feedback'
 
 const useStyles = createStyles((theme) => ({
 	inner: {
 		display: 'flex',
 		justifyContent: 'space-between',
 		paddingTop: theme.spacing.xl * 1,
-		paddingBottom: theme.spacing.xl * 2,
+		// paddingBottom: theme.spacing.xl * 1,
+		[theme.fn.smallerThan('md')]: {
+			flexDirection: 'column-reverse',
+		},
 	},
 
 	content: {
@@ -66,17 +70,8 @@ const useStyles = createStyles((theme) => ({
 		// },
 	},
 
-	control: {
-		[theme.fn.smallerThan('xs')]: {
-			flex: 1,
-		},
-	},
-
 	image: {
 		flex: 1,
-		[theme.fn.smallerThan('sm')]: {
-			display: 'none',
-		},
 		maxWidth: 500,
 		maxHeight: '100%',
 		margin: 'auto',
@@ -84,16 +79,6 @@ const useStyles = createStyles((theme) => ({
 
 	pages: {
 		width: 80,
-	},
-
-	highlight: {
-		position: 'relative',
-		backgroundColor: theme.fn.variant({
-			variant: 'light',
-			color: theme.primaryColor,
-		}).background,
-		borderRadius: theme.radius.sm,
-		padding: '4px 12px',
 	},
 }))
 
@@ -125,19 +110,6 @@ export async function getStaticProps({ params }) {
 		.from('pictures')
 		.select()
 		.eq('park_id', parseInt(params.id))
-
-	// console.log('errors', errors)
-	// console.log('pictures', pictures)
-	// console.log('parkData', parkData)
-
-	// if (!parkData) {
-	// 	return {
-	// 		redirect: {
-	// 			destination: '/',
-	// 			permanent: false,
-	// 		},
-	// 	}
-	// }
 
 	return {
 		props: {
@@ -193,15 +165,18 @@ const compileData = (data) => {
 }
 
 const processClass = (string) => {
-	const searchWords = string.split(' ')
-	for (let key in Classifications) {
-		for (let i = 0; i < searchWords.length; i++) {
-			if (key.toLowerCase().includes(searchWords[i].toLowerCase())) {
-				return Classifications[key]
+	if (string) {
+		const searchWords = string.split(' ')
+		for (let key in Classifications) {
+			for (let i = 0; i < searchWords.length; i++) {
+				if (key.toLowerCase().includes(searchWords[i].toLowerCase())) {
+					return Classifications[key]
+				}
 			}
 		}
+	} else {
+		return ''
 	}
-	return undefined
 }
 
 const setColor = (data) => {
@@ -325,7 +300,7 @@ const Park = ({ parkData, pictures }) => {
 			fetchNearby().then((data) => setNearby(data))
 		}
 		// return setNearby(fetchNearby().slice(2))
-	}, [park])
+	}, [park, parkData])
 
 	// console.log(nearby)
 
@@ -517,7 +492,7 @@ const Park = ({ parkData, pictures }) => {
 											className={classes.control}
 											component='a'
 											href={park.website}
-											variant='default'
+											variant='outline'
 											rightIcon={<IconExternalLink size={20} />}
 											target='_blank'
 										>
@@ -528,28 +503,28 @@ const Park = ({ parkData, pictures }) => {
 									)}
 								</Group>
 							</div>
-							<Stack>
-								{pictures.length > 0 ? (
-									<Image
-										src={pictures[0].url}
-										alt={pictures[0].description}
-										className={classes.image}
-										width={300}
-										height={800}
-										priority
-									/>
-								) : (
-									<Image
-										src={parkPicture}
-										alt='default'
-										className={classes.image}
-										width={300}
-										height={800}
-										priority
-									/>
-								)}
-							</Stack>
+							{pictures.length > 0 ? (
+								<Image
+									src={pictures[0].url}
+									alt={pictures[0].description}
+									className={classes.image}
+									width={300}
+									height={800}
+									priority
+								/>
+							) : (
+								<Image
+									src={parkPicture}
+									alt='default'
+									className={classes.image}
+									width={300}
+									height={800}
+									priority
+								/>
+							)}
 						</div>
+
+						<Feedback id={park.ID} />
 
 						{pictures.length > 1 && (
 							<Text color='' size='xl' fw='bold'>

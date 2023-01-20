@@ -78,29 +78,31 @@ const useStyles = createStyles((theme) => ({
 export function HeaderResponsive({ links })
 {
     const [opened, { toggle, close }] = useDisclosure(false);
-    const [active, setActive] = useState(links[0].link);
+    const [active, setActive] = useState(null);
     const { classes, cx } = useStyles();
 
-    const items = links.map((link) => (
-        <a
-            key={link.label}
-            href={link.link}
-            className={cx(classes.link, { [classes.linkActive]: active === link.link })}
-            onClick={(event) =>
-            {
-                event.preventDefault();
-                setActive(link.link);
-                close();
-            }}
-        >
-            {link.label}
-        </a>
-    ));
+    const items = links.map((link) =>
+    {
+        return (
+            <Link
+                key={link.label}
+                href={link.link}
+                className={cx(classes.link, { [classes.linkActive]: active === link.link })}
+                onClick={() =>
+                {
+                    setActive(link.link);
+                    close()
+                }}
+            >
+                {link.label}
+            </Link>
+        )
+    });
 
     return (
         <Header height={HEADER_HEIGHT} mb={10} className={classes.root}>
             <Container className={classes.header}>
-                <Link href='/'>
+                <Link href='/' onClick={() => setActive(null)}>
                     <Text
                         c='red.9'
                         sx={{ fontFamily: 'Greycliff CF, sans-serif' }}

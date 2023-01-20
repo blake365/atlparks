@@ -57,7 +57,7 @@ export default function Home({ parks }) {
 		if (filtered.length > 0) {
 			setSearchID(filtered[0].ID)
 		}
-	}, [search])
+	}, [search, parks])
 
 	return (
 		<div className='pt-0 pb-8'>
@@ -136,8 +136,6 @@ export default function Home({ parks }) {
 					</Wrapper>
 				</Paper>
 			</main>
-
-			<footer className={styles.footer}>Built by Blake</footer>
 		</div>
 	)
 }

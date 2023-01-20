@@ -19,10 +19,11 @@ export default function Card({ park })
     ]
 
     return (
-        <div className="p-2 m-2 transition-transform border rounded-sm sm:w-64 w-84 hover:scale-102 h-84 hover:bg-slate-200 bg-slate-100">
-            <Link
-                href={`/park/${park.ID}`}
-            >
+        <Link
+            href={`/park/${park.ID}`}
+        >
+            <div className="p-2 m-2 transition-transform border rounded-sm sm:w-64 w-84 hover:scale-102 h-84 hover:bg-slate-200 bg-slate-100">
+
                 <div className="flex-col">
                     <Image src={parkPicture} alt='park picture' />
                     <h2 className="mt-2 text-lg font-semibold">{park.Name}</h2>
@@ -37,7 +38,8 @@ export default function Card({ park })
                         }
                     })}
                 </div>
-            </Link>
-        </div>
+
+            </div>
+        </Link>
     )
 }
