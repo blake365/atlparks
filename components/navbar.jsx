@@ -3,7 +3,7 @@ import Link from 'next/link';
 import { createStyles, Header, Container, Group, Burger, Paper, Transition, Text } from '@mantine/core';
 import { useDisclosure } from '@mantine/hooks';
 
-const HEADER_HEIGHT = 80;
+const HEADER_HEIGHT = 60;
 
 const useStyles = createStyles((theme) => ({
     root: {
@@ -101,10 +101,10 @@ export function HeaderResponsive({ links })
 
     return (
         <Header height={HEADER_HEIGHT} mb={10} className={classes.root}>
-            <Container className={classes.header}>
+            <Container className={classes.header} >
                 <Link href='/' onClick={() => setActive(null)}>
                     <Text
-                        c='red.9'
+                        color='blue'
                         sx={{ fontFamily: 'Greycliff CF, sans-serif' }}
                         ta="center"
                         fz={30}

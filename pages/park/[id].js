@@ -1,6 +1,7 @@
 import { Wrapper } from '@googlemaps/react-wrapper'
 import Image from 'next/image'
 import { useEffect, useState, useRef } from 'react'
+import Head from 'next/head'
 
 import GMap from '../../components/map'
 import {
@@ -331,260 +332,256 @@ const Park = ({ parkData, pictures }) => {
 	}
 
 	return (
-		<div className='pt-0 pb-8'>
+		<div>
 			{park && features && color ? (
-				<Box mt='lg'>
-					<Container>
-						<Group position='apart' mb='sm'>
-							<Button
-								radius='sm'
-								size='sm'
-								className={classes.control}
-								component='a'
-								href={`/park/${park.ID - 1}`}
-								variant='default'
-								leftIcon={<IconArrowLeft size={18} />}
-								disabled={park.ID < 102}
-							>
-								Previous
-							</Button>
-							<Button
-								radius='sm'
-								size='sm'
-								px='sm'
-								className={classes.control}
-								variant='default'
-								rightIcon={<IconThumbUp size={20} />}
-								onClick={handleLike}
-								c={token?.likes.includes(id) ? 'blue' : 'black'}
-							>
-								{likes}
-							</Button>
-							<Button
-								radius='sm'
-								size='sm'
-								className={classes.control}
-								component='a'
-								href={`/park/${park.ID + 1}`}
-								variant='default'
-								rightIcon={<IconArrowRight size={18} />}
-								disabled={park.ID > 496}
-							>
-								Next
-							</Button>
-						</Group>
-
-						<div>
-							<Group position='apart'>
-								<Title
-									variant='gradient'
-									gradient={{ from: color, to: 'gray', deg: 135 }}
-									// gradient={{ from: 'indigo', to: 'cyan', deg: 45 }}
-									// fz={50}
-									// fw={700}
-									className={classes.title}
+				<div className='pt-0 pb-8'>
+					<Head>
+						<title>{park.Name} in Atlanta, Georgia</title>
+						<meta name='description' content={park.description} />
+					</Head>
+					<Box mt='lg'>
+						<Container>
+							<Group position='apart' mb='sm'>
+								<Button
+									radius='sm'
+									size='sm'
+									className={classes.control}
+									component='a'
+									href={`/park/${park.ID - 1}`}
+									variant='default'
+									leftIcon={<IconArrowLeft size={18} />}
+									disabled={park.ID < 102}
 								>
-									{park.Name}{' '}
-								</Title>
-								<Badge color={color} variant='outline'>
-									{park.Classification}
-								</Badge>
+									Previous
+								</Button>
+								<Button
+									radius='sm'
+									size='sm'
+									px='sm'
+									className={classes.control}
+									variant='default'
+									rightIcon={<IconThumbUp size={20} />}
+									onClick={handleLike}
+									c={token?.likes.includes(id) ? 'blue' : 'black'}
+								>
+									{likes}
+								</Button>
+								<Button
+									radius='sm'
+									size='sm'
+									className={classes.control}
+									component='a'
+									href={`/park/${park.ID + 1}`}
+									variant='default'
+									rightIcon={<IconArrowRight size={18} />}
+									disabled={park.ID > 496}
+								>
+									Next
+								</Button>
 							</Group>
-							<Text
-								color='dimmed'
-								mt='md'
-								className='hover:underline'
-								onClick={handleAddressClick}
-							>
-								{park.Address}
-							</Text>
-						</div>
-						<div className={classes.inner}>
-							<div className={classes.content}>
-								<Group position='center' spacing='sm' align='center'>
-									<Paper
-										shadow='sm'
-										p='sm'
-										withBorder
-										className={classes.pages}
+
+							<div>
+								<Group position='apart'>
+									<Title
+										variant='gradient'
+										gradient={{ from: color, to: 'gray', deg: 135 }}
+										// gradient={{ from: 'indigo', to: 'cyan', deg: 45 }}
+										// fz={50}
+										// fw={700}
+										className={classes.title}
 									>
-										<Text c='dimmed' ta='center'>
-											Acres
-										</Text>
-										<Text fw='bold' fz='xl' ta='center'>
-											{park.Acreage > 50
-												? Math.round(park.Acreage)
-												: park.Acreage}
-										</Text>
-									</Paper>
-									<Paper
-										shadow='sm'
-										p='sm'
-										withBorder
-										className={classes.pages}
-									>
-										<Text c='dimmed' ta='center'>
-											District
-										</Text>
-										<Text fw='bold' fz='xl' ta='center'>
-											{park.Council_District}
-										</Text>
-									</Paper>
-									<Paper
-										shadow='sm'
-										p='sm'
-										withBorder
-										className={classes.pages}
-									>
-										<Text c='dimmed' ta='center'>
-											NPU
-										</Text>
-										<Text fw='bold' fz='xl' ta='center'>
-											{park.NPU}
-										</Text>
-									</Paper>
+										{park.Name}{' '}
+									</Title>
+									<Badge color={color} variant='outline'>
+										{park.Classification}
+									</Badge>
 								</Group>
-								<Text color='' mt='md'>
-									{park.description}
-								</Text>
-
-								<List
-									mt={30}
-									spacing='sm'
-									size='md'
-									icon={
-										<ThemeIcon size={16} radius='xl' color={color}>
-											<IconCheck size={12} stroke={1.5} />
-										</ThemeIcon>
-									}
+								<Text
+									color='dimmed'
+									mt='md'
+									className='hover:underline'
+									onClick={handleAddressClick}
 								>
-									<Text color='' size='lg' fw='bold' mb='md'>
-										Amenities:
-									</Text>
-									{features.map((item, index) => (
-										<List.Item key={index}>{item}</List.Item>
-									))}
-									{features.length === 0 && (
-										<Text color='red' size='sm'>
-											No Amenities
-										</Text>
-									)}
-								</List>
-
-								<Text color='' mt='md'>
-									{processClass(park.Classification)}
+									{park.Address}
 								</Text>
+							</div>
+							<div className={classes.inner}>
+								<div className={classes.content}>
+									<Group position='center' spacing='sm' align='center'>
+										<Paper
+											shadow='sm'
+											p='sm'
+											withBorder
+											className={classes.pages}
+										>
+											<Text c='dimmed' ta='center'>
+												Acres
+											</Text>
+											<Text fw='bold' fz='xl' ta='center'>
+												{park.Acreage > 50
+													? Math.round(park.Acreage)
+													: park.Acreage}
+											</Text>
+										</Paper>
+										<Paper
+											shadow='sm'
+											p='sm'
+											withBorder
+											className={classes.pages}
+										>
+											<Text c='dimmed' ta='center'>
+												District
+											</Text>
+											<Text fw='bold' fz='xl' ta='center'>
+												{park.Council_District}
+											</Text>
+										</Paper>
+										<Paper
+											shadow='sm'
+											p='sm'
+											withBorder
+											className={classes.pages}
+										>
+											<Text c='dimmed' ta='center'>
+												NPU
+											</Text>
+											<Text fw='bold' fz='xl' ta='center'>
+												{park.NPU}
+											</Text>
+										</Paper>
+									</Group>
+									<Text color='' mt='md'>
+										{park.description}
+									</Text>
 
-								<Group mt={30}>
-									{/* <Button
-												variant='outline'
+									<List
+										my={15}
+										spacing='sm'
+										size='md'
+										icon={
+											<ThemeIcon size={16} radius='xl' color={color}>
+												<IconCheck size={12} stroke={1.5} />
+											</ThemeIcon>
+										}
+									>
+										{features.length !== 0 && (
+											<Title color='' order={4} mb='sm'>
+												Amenities
+											</Title>
+										)}
+										{features.map((item, index) => (
+											<List.Item key={index}>{item}</List.Item>
+										))}
+									</List>
+									<Stack spacing='xs'>
+										<Title order={4}>{park.Classification}</Title>
+										<Text>{processClass(park.Classification)}</Text>
+									</Stack>
+									<Group mt={30}>
+										{park.website ? (
+											<Button
 												radius='sm'
 												size='md'
-												color={color}
 												className={classes.control}
+												component='a'
+												href={park.website}
+												variant='outline'
+												rightIcon={<IconExternalLink size={20} />}
+												target='_blank'
 											>
-												Submit A Tip
-											</Button> */}
-									{park.website ? (
-										<Button
-											radius='sm'
-											size='md'
-											className={classes.control}
-											component='a'
-											href={park.website}
-											variant='outline'
-											rightIcon={<IconExternalLink size={20} />}
-											target='_blank'
-										>
-											Park Website
-										</Button>
-									) : (
-										''
-									)}
-								</Group>
-							</div>
-							{pictures.length > 0 ? (
-								<Image
-									src={pictures[0].url}
-									alt={pictures[0].description}
-									className={classes.image}
-									width={300}
-									height={800}
-									priority
-								/>
-							) : (
-								<Image
-									src={parkPicture}
-									alt='default'
-									className={classes.image}
-									width={300}
-									height={800}
-									priority
-								/>
-							)}
-						</div>
-
-						<Feedback id={park.ID} />
-
-						{pictures.length > 1 && (
-							<Text color='' size='xl' fw='bold'>
-								Photo Gallery
-							</Text>
-						)}
-						<Spoiler maxHeight={300} showLabel='Show more' hideLabel='Hide'>
-							<Group>
-								{pictures.map((image) => {
-									return (
-										<Image
-											src={image.url}
-											alt='default'
-											width={300}
-											height={300}
-											key={image.id}
-										/>
-									)
-								})}
-							</Group>
-						</Spoiler>
-						<Paper
-							shadow='lg'
-							radius='md'
-							withBorder
-							style={{ display: 'flex', height: '400px' }}
-							ref={mapRef}
-						>
-							<Wrapper apiKey={process.env.NEXT_PUBLIC_MAPSAPI} render={render}>
-								<GMap
-									center={center}
-									zoom={zoom}
-									style={{
-										height: '100%',
-										flexGrow: 1,
-										borderRadius: 10,
-									}}
-								>
-									<Marker
-										position={{ lat: park.latitude, lng: park.longitude }}
-										title={park.Name}
+												Park Website
+											</Button>
+										) : (
+											''
+										)}
+									</Group>
+								</div>
+								{pictures.length > 0 ? (
+									<Image
+										src={pictures[0].url}
+										alt={pictures[0].description}
+										className={classes.image}
+										width={300}
+										height={800}
+										priority
 									/>
-								</GMap>
-							</Wrapper>
-						</Paper>
-						{nearby.length > 0 ? (
-							<Title align='center' mt='lg' pt='lg'>
-								Nearby Parks
-							</Title>
-						) : (
-							''
-						)}
-						<Group position='center'>
-							{nearby.length > 0 &&
-								nearby.map((park) => {
-									return <Card park={park} key={park.ID} />
-								})}
-						</Group>
-					</Container>
-				</Box>
+								) : (
+									<Image
+										src={parkPicture}
+										alt='default'
+										className={classes.image}
+										width={300}
+										height={800}
+										priority
+									/>
+								)}
+							</div>
+
+							<Feedback id={park.ID} />
+
+							{pictures.length > 1 && (
+								<Text color='' size='xl' fw='bold'>
+									Photo Gallery
+								</Text>
+							)}
+							<Spoiler maxHeight={300} showLabel='Show more' hideLabel='Hide'>
+								<Group>
+									{pictures.map((image) => {
+										return (
+											<Image
+												src={image.url}
+												alt='default'
+												width={300}
+												height={300}
+												key={image.id}
+											/>
+										)
+									})}
+								</Group>
+							</Spoiler>
+							<Paper
+								shadow='lg'
+								radius='md'
+								withBorder
+								style={{ display: 'flex', height: '400px' }}
+								ref={mapRef}
+							>
+								<Wrapper
+									apiKey={process.env.NEXT_PUBLIC_MAPSAPI}
+									render={render}
+								>
+									<GMap
+										center={center}
+										zoom={zoom}
+										style={{
+											height: '100%',
+											flexGrow: 1,
+											borderRadius: 10,
+										}}
+									>
+										<Marker
+											position={{ lat: park.latitude, lng: park.longitude }}
+											title={park.Name}
+										/>
+									</GMap>
+								</Wrapper>
+							</Paper>
+							{nearby.length > 0 ? (
+								<Title align='center' mt='lg' pt='lg'>
+									Nearby Parks
+								</Title>
+							) : (
+								''
+							)}
+							<Group position='center'>
+								{nearby.length > 0 &&
+									nearby.map((park) => {
+										return <Card park={park} key={park.ID} />
+									})}
+							</Group>
+						</Container>
+					</Box>
+				</div>
 			) : (
 				<Center>
 					<Loader size='xl' variant='dots' mt='lg' />

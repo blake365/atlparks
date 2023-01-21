@@ -3,7 +3,7 @@ import Link from "next/link"
 
 import { iconPicker } from "../utils/functions"
 
-import parkPicture from '../public/osarugue-igbinoba-xiTTfeBdbs8-unsplash.jpg'
+import parkPicture from '../public/placeholder.png'
 
 export default function Card({ park })
 {
