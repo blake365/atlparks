@@ -12,6 +12,7 @@ import Card from '../components/card'
 
 import { supabase } from '../config/config'
 import { useEffect, useState } from 'react'
+import { HeroContentLeft } from '../components/hero'
 
 export async function getStaticProps() {
 	let { data: parks, error } = await supabase
@@ -66,12 +67,12 @@ export default function Home({ parks }) {
 				<meta name='description' content='Database of Atlanta Parks' />
 				<link rel='icon' href='/favicon.ico' />
 			</Head>
-
-			<main className='flex flex-col items-center justify-center flex-1 w-11/12 pt-4 pb-4 mx-auto min-h-100'>
-				<Group align='end'>
+			<HeroContentLeft />
+			<main className='flex flex-col items-center justify-center flex-1 w-11/12 pb-4 mx-auto min-h-100'>
+				<Group align='end' position='left' my='md'>
 					<Autocomplete
 						label='Find A Park'
-						placeholder='Start Typing'
+						placeholder='Park Name'
 						data={parks.map((park) => {
 							return { value: park.Name, id: park.ID }
 						})}

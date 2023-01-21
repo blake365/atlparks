@@ -1,5 +1,7 @@
 import { GiKidSlide, GiWaterSplash, GiBasketballBasket, GiSkateboard, GiSittingDog, GiSoccerField, GiTennisBall } from 'react-icons/gi'
 
+import { MdPool } from 'react-icons/md'
+
 import { TbBuildingWarehouse } from 'react-icons/tb'
 
 export function iconPicker(icon)
@@ -8,7 +10,7 @@ export function iconPicker(icon)
 		case 'GiKidSlide':
 			return <GiKidSlide />
 		case 'GiWaterSplash':
-			return <GiWaterSplash />
+			return <MdPool />
 		case 'GiBasketballBasket':
 			return <GiBasketballBasket />
 		case 'GiSkateboard':

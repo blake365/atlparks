@@ -150,7 +150,9 @@ const compileData = (data) => {
 		// console.log(data[element])
 		if (data[element]) {
 			let string = element
-			if (string.indexOf('_') !== -1) {
+			if (string === 'Splash_pad') {
+				output.push('Pool / Splash Pad')
+			} else if (string.indexOf('_') !== -1) {
 				const [first, second] = string.split('_')
 				const result = `${first} ${second
 					.charAt(0)
@@ -223,7 +225,7 @@ const setColor = (data) => {
 const setZoom = (acres) => {
 	if (acres < 5) {
 		return 18
-	} else if (acres < 25) {
+	} else if (acres < 15) {
 		return 17
 	} else if (acres < 100) {
 		return 16
@@ -334,31 +336,31 @@ const Park = ({ parkData, pictures }) => {
 	return (
 		<div>
 			{park && features && color ? (
-				<div className='pt-0 pb-8'>
+				<div className='pt-0 pb-8 mb-14'>
 					<Head>
 						<title>{park.Name} in Atlanta, Georgia</title>
-						<meta name='description' content={park.description} />
+						<meta name='description' content={park?.description} />
 					</Head>
 					<Box mt='lg'>
 						<Container>
 							<Group position='apart' mb='sm'>
 								<Button
 									radius='sm'
-									size='sm'
-									className={classes.control}
+									size='xs'
 									component='a'
 									href={`/park/${park.ID - 1}`}
 									variant='default'
 									leftIcon={<IconArrowLeft size={18} />}
 									disabled={park.ID < 102}
+									px='xs'
+									w='110px'
 								>
 									Previous
 								</Button>
 								<Button
 									radius='sm'
-									size='sm'
-									px='sm'
-									className={classes.control}
+									size='xs'
+									px='xs'
 									variant='default'
 									rightIcon={<IconThumbUp size={20} />}
 									onClick={handleLike}
@@ -368,13 +370,14 @@ const Park = ({ parkData, pictures }) => {
 								</Button>
 								<Button
 									radius='sm'
-									size='sm'
-									className={classes.control}
+									size='xs'
 									component='a'
 									href={`/park/${park.ID + 1}`}
 									variant='default'
 									rightIcon={<IconArrowRight size={18} />}
 									disabled={park.ID > 496}
+									px='xs'
+									w='110px'
 								>
 									Next
 								</Button>

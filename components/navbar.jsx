@@ -9,6 +9,8 @@ const useStyles = createStyles((theme) => ({
     root: {
         position: 'relative',
         zIndex: 1,
+        // backgroundColor: theme.colors.gray[1]
+
     },
 
     dropdown: {
@@ -100,7 +102,7 @@ export function HeaderResponsive({ links })
     });
 
     return (
-        <Header height={HEADER_HEIGHT} mb={10} className={classes.root}>
+        <Header height={HEADER_HEIGHT} className={classes.root}>
             <Container className={classes.header} >
                 <Link href='/' onClick={() => setActive(null)}>
                     <Text
