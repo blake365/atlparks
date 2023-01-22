@@ -22,19 +22,19 @@ export default function Card({ park })
         <Link
             href={`/park/${park.ID}`}
         >
-            <div className="p-2 m-2 transition-transform border rounded-sm sm:w-64 w-84 hover:scale-102 h-84 hover:bg-slate-200 bg-slate-100">
+            <div className="p-2 m-2 transition-transform border rounded-sm sm:h-83 sm:w-64 w-84 hover:scale-102 hover:bg-slate-200 bg-slate-100">
 
                 <div className="flex-col">
                     <Image src={parkPicture} alt='park picture' />
                     <h2 className="mt-2 text-lg font-semibold">{park.Name}</h2>
-                    <p>{park.Address}</p>
-                    {park.Acreage ? (<p>{park.Acreage} Acres</p>) : ('')}
+                    <p className="text-sm">{park.Address}</p>
+                    {park.Acreage ? (<p className="text-sm">{park.Acreage} Acres</p>) : ('')}
                 </div>
                 <div>
                     {activities.map(item =>
                     {
                         if (item.status) {
-                            return (<div key={item.name} className="inline-block mx-1 text-lg">{iconPicker(item.icon)}</div>)
+                            return (<div key={item.name} className="inline-block mx-1 mt-1 text-lg">{iconPicker(item.icon)}</div>)
                         }
                     })}
                 </div>
