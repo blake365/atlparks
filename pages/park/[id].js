@@ -38,6 +38,7 @@ import Marker from '../../components/marker'
 
 import { Classifications } from '../../config/classifications'
 import Feedback from '../../components/feedback'
+import { NewCard } from '../../components/newcard'
 
 const useStyles = createStyles((theme) => ({
 	inner: {
@@ -576,10 +577,10 @@ const Park = ({ parkData, pictures }) => {
 							) : (
 								''
 							)}
-							<Group position='center'>
+							<Group position='center' spacing='xs'>
 								{nearby.length > 0 &&
 									nearby.map((park) => {
-										return <Card park={park} key={park.ID} />
+										return <NewCard park={park} key={park.ID} />
 									})}
 							</Group>
 						</Container>

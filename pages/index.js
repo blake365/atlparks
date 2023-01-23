@@ -13,6 +13,7 @@ import Card from '../components/card'
 import { supabase } from '../config/config'
 import { useEffect, useState } from 'react'
 import { HeroContentLeft } from '../components/hero'
+import { CardWithStats, NewCard } from '../components/newcard'
 
 export async function getStaticProps() {
 	let { data: parks, error } = await supabase
@@ -89,7 +90,7 @@ export default function Home({ parks }) {
 				<div className='flex flex-wrap items-center justify-center max-w-[960px] mb-8'>
 					{parks.map((park) => {
 						if (park.favorite) {
-							return <Card park={park} key={park.ID} />
+							return <NewCard park={park} key={park.ID} />
 						}
 					})}
 				</div>

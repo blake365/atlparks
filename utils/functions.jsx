@@ -27,3 +27,44 @@ export function iconPicker(icon)
 			return null
 	}
 }
+
+export const setColor = (data) =>
+{
+	let color
+	switch (data.Classification) {
+		case 'Regional':
+			color = 'orange'
+			break
+		case 'Community':
+			color = 'teal'
+			break
+		case 'Neighborhood':
+			color = 'blue'
+			break
+		case 'Greenspot':
+			color = 'green'
+			break
+		case 'Nature Preserve':
+			color = 'lime'
+			break
+		case 'Playlot':
+			color = 'violet'
+			break
+		case 'Park in Holding':
+			color = 'yellow'
+			break
+		case 'Special Facility':
+			color = 'gray'
+			break
+		case 'Plaza':
+			color = 'indigo'
+			break
+		case 'Trail':
+			color = 'lime'
+			break
+		default:
+			color = 'white'
+	}
+
+	return color
+}

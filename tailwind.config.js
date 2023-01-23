@@ -14,6 +14,9 @@ module.exports = {
 				83: '21rem',
 				84: '22rem',
 			},
+			width: {
+				70: '17rem',
+			},
 		},
 	},
 	plugins: [require('@tailwindcss/forms')],
