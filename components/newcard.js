@@ -1,4 +1,4 @@
-import { createStyles, Card, Text, Badge, Title, Stack } from '@mantine/core'
+import { Card, Text, Badge, Title, Stack } from '@mantine/core'
 
 import { iconPicker } from '../utils/functions'
 import parkPicture from '../public/placeholder.png'
@@ -7,14 +7,6 @@ import { setColor } from '../utils/functions'
 
 import Image from 'next/image'
 import Link from 'next/link'
-
-const useStyles = createStyles((theme) => ({
-	// card: {
-	// 	backgroundColor:
-	// 		theme.colorScheme === 'dark' ? theme.colors.dark[7] : theme.white,
-	// 	width: '15rem',
-	// },
-}))
 
 export function NewCard({ park }) {
 	const activities = [
@@ -40,7 +32,7 @@ export function NewCard({ park }) {
 		{ name: 'tennis', status: park.Tennis, icon: 'GiTennisBall' },
 	]
 
-	const { classes } = useStyles()
+	const color = setColor(park)
 
 	return (
 		<Link href={`/park/${park.ID}`}>
@@ -48,14 +40,14 @@ export function NewCard({ park }) {
 				withBorder
 				p='md'
 				m='sm'
-				className={`${classes.card} hover:scale-102 transition-transform w-70`}
+				className='transition-transform hover:scale-102 w-70'
 				shadow='sm'
 				radius='sm'
 			>
 				<Card.Section className='relative'>
 					<Image src={parkPicture} alt={park.Name} height={200} width={288} />
 					<Badge
-						color={setColor(park)}
+						color={color}
 						variant='light'
 						className='absolute z-2 top-3 right-3'
 					>
@@ -72,7 +64,7 @@ export function NewCard({ park }) {
 					</Text>
 				</Stack>
 
-				<Card.Section className='h-10 border-t '>
+				<Card.Section className='h-10 border-t' bg={color + '.1'}>
 					<div className='flex justify-center my-2'>
 						{activities.map((item) => {
 							if (item.status) {

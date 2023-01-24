@@ -1,6 +1,5 @@
 import Head from 'next/head'
 import { useRouter } from 'next/router'
-import styles from '../styles/Home.module.css'
 
 import GMap from '../components/map'
 import Marker from '../components/marker'
@@ -8,12 +7,10 @@ import { Wrapper } from '@googlemaps/react-wrapper'
 
 import { Paper, Autocomplete, Group, Button } from '@mantine/core'
 
-import Card from '../components/card'
-
 import { supabase } from '../config/config'
 import { useEffect, useState } from 'react'
 import { HeroContentLeft } from '../components/hero'
-import { CardWithStats, NewCard } from '../components/newcard'
+import { NewCard } from '../components/newcard'
 
 export async function getStaticProps() {
 	let { data: parks, error } = await supabase

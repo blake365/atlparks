@@ -456,6 +456,14 @@
     "@radix-ui/react-scroll-area" "1.0.2"
     "react-textarea-autosize" "8.3.4"
 
+"@mantine/form@^5.10.1":
+  "integrity" "sha512-KGKAcVURVAHVr+KbNyqvt0L8ROdpyFxCR8fh2TCIkGeFgQXWLcXF4JOeNSx2KCXf0wbEEXgp49BXV+tmeLHoiA=="
+  "resolved" "https://registry.npmjs.org/@mantine/form/-/form-5.10.1.tgz"
+  "version" "5.10.1"
+  dependencies:
+    "fast-deep-equal" "^3.1.3"
+    "klona" "^2.0.5"
+
 "@mantine/hooks@^5.10.0", "@mantine/hooks@5.10.0":
   "integrity" "sha512-dAefxpvqjFtXNeKse+awkIa4U1XGnMMOqWg1+07Y2Ino2G6EiT8AEnYqQyTXgcPoNaWwG9533Q/DDadmyweqaQ=="
   "resolved" "https://registry.npmjs.org/@mantine/hooks/-/hooks-5.10.0.tgz"
@@ -2247,6 +2255,11 @@
   dependencies:
     "array-includes" "^3.1.5"
     "object.assign" "^4.1.3"
+
+"klona@^2.0.5":
+  "integrity" "sha512-dhG34DXATL5hSxJbIexCft8FChFXtmskoZYnoPWjXQuebWYCNkVeV3KkGegCK9CP1oswI/vQibS2GY7Em/sJJA=="
+  "resolved" "https://registry.npmjs.org/klona/-/klona-2.0.6.tgz"
+  "version" "2.0.6"
 
 "language-subtag-registry@^0.3.20":
   "integrity" "sha512-tN0MCzyWnoz/4nHS6uxdlFWoUZT7ABptwKPQ52Ea7URk6vll88bWBVhodtnlfEuCcKWNGoc+uGbw1cwa9IKh/w=="
