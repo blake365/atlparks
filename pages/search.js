@@ -2,16 +2,13 @@ import { useEffect, useState } from 'react'
 import { useForm } from '@mantine/form'
 import {
 	Checkbox,
-	Group,
 	Select,
 	TextInput,
 	Title,
 	Text,
 	Textarea,
 	Button,
-	Stack,
 	MultiSelect,
-	Loader,
 } from '@mantine/core'
 
 import { supabase } from '../config/config'
@@ -300,7 +297,7 @@ const Search = () => {
 					<div className='flex flex-wrap items-center justify-center mb-8'>
 						{result &&
 							result.map((park) => {
-								return <NewCard park={park} />
+								return <NewCard park={park} key={park.ID} />
 							})}
 					</div>
 				</div>
