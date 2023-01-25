@@ -1,5 +1,5 @@
 import { createStyles, Overlay, Container, Title, Button, Text } from '@mantine/core';
-
+import Link from 'next/link';
 const useStyles = createStyles((theme) => ({
     hero: {
         position: 'relative',
@@ -78,10 +78,11 @@ export function HeroContentLeft()
                 <Text className={classes.description} size="xl" mt="xl">
                     Atlanta is home to so many great parks. Find the perfect spot to relax, enjoy nature, swim, run, shoot hoops, walk your dog, or experience any of the other great outdoor amenities the parks have to offer.
                 </Text>
-
-                <Button variant="gradient" size="md" radius="sm" className={classes.control}>
-                    Find A Park
-                </Button>
+                <Link href='/search'>
+                    <Button variant="gradient" size="md" radius="sm" className={classes.control}>
+                        Find A Park
+                    </Button>
+                </Link>
             </Container>
         </div>
     );

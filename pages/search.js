@@ -11,6 +11,7 @@ import {
 	Button,
 	Stack,
 	MultiSelect,
+	Loader,
 } from '@mantine/core'
 
 import { supabase } from '../config/config'
@@ -22,6 +23,7 @@ function addSeparator(str) {
 
 const Search = () => {
 	const [result, setResult] = useState([])
+	const [loading, setLoading] = useState(false)
 
 	const form = useForm({
 		initialValues: {
@@ -66,13 +68,17 @@ const Search = () => {
 		// if an address is provided, use full text search, apply separator
 		// if classification provided, add to search parameters
 		// if npu or district is added, add to search parameters
+		setLoading(true)
 
 		const filterByName = values.park
 		const filterDescription = addSeparator(values.description)
 		const filterAddress = addSeparator(values.location)
 		const filterClassification = values.classification
 
-		let query = supabase.from('parks').select('*')
+		let query = supabase
+			.from('parks')
+			.select('*')
+			.order('ID', { ascending: true })
 
 		if (filterByName) {
 			query = query.textSearch('Name', filterByName)
@@ -85,7 +91,7 @@ const Search = () => {
 			setResult(data)
 			console.log(error)
 		} else if (filterAddress) {
-			query = query.textSearch('fts', filterAddress)
+			query = query.textSearch('Address', filterAddress)
 			const { data, error } = await query
 			setResult(data)
 			console.log(error)
@@ -129,30 +135,39 @@ const Search = () => {
 		const { data, error } = await query
 		setResult(data)
 		console.log(error)
+		setLoading(false)
 	}
 
 	return (
-		<main className='flex flex-col items-center justify-center flex-1 w-11/12 pb-4 mx-auto min-h-100'>
-			<Title>Find a Park</Title>
-			<Group>
+		<main className='w-11/12 pb-4 mx-auto'>
+			<Title align='center' mt='sm'>
+				Find a Park
+			</Title>
+			<div className='flex flex-wrap mb-2 sm:flex-nowrap sm:h-screen'>
 				{/* inputs */}
-				<form onSubmit={form.onSubmit((values) => submitForm(values))}>
-					<Stack style={{ width: 250 }} spacing='xs'>
-						<Title order={3}>Search by:</Title>
+				<form
+					onSubmit={form.onSubmit((values) => submitForm(values))}
+					className='flex-shrink-0 mx-auto sm:w-70 w-80'
+				>
+					<div className='flex flex-col'>
+						<Text weight='bold'>Search by:</Text>
 						<TextInput
 							label='Park Name'
 							placeholder=''
 							{...form.getInputProps('park')}
+							size='xs'
 						/>
 						<TextInput
 							label='Address'
 							placeholder=''
 							{...form.getInputProps('location')}
+							size='xs'
 						/>
 						<Textarea
 							label='Description'
 							placeholder='search for any word or phrase'
 							{...form.getInputProps('description')}
+							size='xs'
 						/>
 						<Select
 							data={[
@@ -185,6 +200,7 @@ const Search = () => {
 							label='Neighborhood Planning Unit'
 							{...form.getInputProps('npu')}
 							clearable
+							size='xs'
 						/>
 						<Select
 							data={[
@@ -205,6 +221,7 @@ const Search = () => {
 							description=''
 							{...form.getInputProps('district')}
 							clearable
+							size='xs'
 						/>
 						<MultiSelect
 							data={[
@@ -222,59 +239,72 @@ const Search = () => {
 							description=''
 							{...form.getInputProps('classification')}
 							clearable
+							size='xs'
 						/>
-						<Text>Amenities:</Text>
+						<Text mt='sm'>Amenities:</Text>
 						<Checkbox
 							label='Playground'
 							{...form.getInputProps('play', { type: 'checkbox' })}
 							disabled={form.values.park}
+							size='xs'
 						/>
 						<Checkbox
 							label='Fields'
 							{...form.getInputProps('field', { type: 'checkbox' })}
 							disabled={form.values.park}
+							size='xs'
 						/>
 						<Checkbox
 							label='Basketball'
 							{...form.getInputProps('basketball', { type: 'checkbox' })}
 							disabled={form.values.park}
+							size='xs'
 						/>
 						<Checkbox
 							label='Tennis'
 							{...form.getInputProps('tennis', { type: 'checkbox' })}
 							disabled={form.values.park}
+							size='xs'
 						/>
 						<Checkbox
 							label='Pavilion'
 							{...form.getInputProps('pavilion', { type: 'checkbox' })}
 							disabled={form.values.park}
+							size='xs'
 						/>
 						<Checkbox
 							label='Pool / Splash Pad'
 							{...form.getInputProps('pool', { type: 'checkbox' })}
 							disabled={form.values.park}
+							size='xs'
 						/>
 						<Checkbox
 							label='Dog Park'
 							{...form.getInputProps('dog', { type: 'checkbox' })}
 							disabled={form.values.park}
+							size='xs'
 						/>
 						<Checkbox
 							label='Skate Park'
 							{...form.getInputProps('skate', { type: 'checkbox' })}
 							disabled={form.values.park}
+							size='xs'
 						/>
-						<Button type='submit'>Search</Button>
-					</Stack>
+						<Button type='submit' loading={loading} mt='sm'>
+							Search
+						</Button>
+					</div>
 				</form>
 				{/* outputs */}
-				<div className='flex flex-wrap max-w-[960px] mb-8'>
-					{result &&
-						result.map((park) => {
-							return <NewCard park={park} />
-						})}
+				<div className='flex-grow overflow-y-scroll'>
+					<div className='flex flex-wrap items-center justify-center mb-8'>
+						{result &&
+							result.map((park) => {
+								return <NewCard park={park} />
+							})}
+					</div>
 				</div>
-			</Group>
+			</div>
 		</main>
 	)
 }

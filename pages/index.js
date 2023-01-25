@@ -67,22 +67,6 @@ export default function Home({ parks }) {
 			</Head>
 			<HeroContentLeft />
 			<main className='flex flex-col items-center justify-center flex-1 w-11/12 pb-4 mx-auto min-h-100'>
-				<Group align='end' position='left' my='md'>
-					<Autocomplete
-						label='Find A Park'
-						placeholder='Park Name'
-						data={parks.map((park) => {
-							return { value: park.Name, id: park.ID }
-						})}
-						limit={10}
-						value={search}
-						onChange={setSearch}
-						radius='sm'
-					/>
-					<Button variant='default' component='a' href={`/park/${searchID}`}>
-						Go
-					</Button>
-				</Group>
 				<h1>Featured Parks</h1>
 				<div className='flex flex-wrap items-center justify-center max-w-[960px] mb-8'>
 					{parks.map((park) => {
