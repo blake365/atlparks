@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useState, useRef } from 'react'
 import { useForm } from '@mantine/form'
 import {
 	Checkbox,
@@ -11,6 +11,7 @@ import {
 	MultiSelect,
 } from '@mantine/core'
 
+import { IconLocation } from '@tabler/icons'
 import { supabase } from '../config/config'
 import { NewCard } from '../components/newcard'
 
@@ -21,6 +22,12 @@ function addSeparator(str) {
 const Search = () => {
 	const [result, setResult] = useState([])
 	const [loading, setLoading] = useState(false)
+
+	const [latitude, setLat] = useState(null)
+	const [longitude, setLong] = useState(null)
+	// const [radius, setRadius] = useState(500)
+
+	const resultRef = useRef(null)
 
 	const form = useForm({
 		initialValues: {
@@ -132,6 +139,53 @@ const Search = () => {
 		const { data, error } = await query
 		setResult(data)
 		console.log(error)
+		resultRef.current.scrollIntoView({ behavior: 'smooth' })
+		setLoading(false)
+	}
+
+	const handleLocationRequest = async (evt) => {
+		evt.preventDefault()
+		setLoading(true)
+		let radius = 1
+		navigator.geolocation.getCurrentPosition((position) => {
+			setLat(position.coords.latitude)
+			setLong(position.coords.longitude)
+		})
+
+		if (latitude && longitude) {
+			function createBoundingBox(lat, lng, miles) {
+				const latDelta = milesToLatitudeDelta(miles)
+				const lngDelta = milesToLongitudeDelta(miles, lat)
+				return {
+					north: lat + latDelta,
+					south: lat - latDelta,
+					east: lng + lngDelta,
+					west: lng - lngDelta,
+				}
+			}
+
+			function milesToLatitudeDelta(miles) {
+				return miles / 69.17
+			}
+
+			function milesToLongitudeDelta(miles, lat) {
+				return miles / (69.17 * Math.cos(lat))
+			}
+
+			const box = createBoundingBox(latitude, longitude, 1)
+			console.log(box)
+
+			const { data, error } = await supabase.rpc('parks_near_me', {
+				min_lat: box.south,
+				min_long: box.west,
+				max_lat: box.north,
+				max_long: box.east,
+			})
+			// console.log(data)
+			console.log(error)
+			setResult(data)
+			resultRef.current.scrollIntoView({ behavior: 'smooth' })
+		}
 		setLoading(false)
 	}
 
@@ -147,7 +201,16 @@ const Search = () => {
 					className='flex-shrink-0 mx-auto sm:w-70 w-80'
 				>
 					<div className='flex flex-col'>
-						<Text weight='bold'>Search by:</Text>
+						<Text weight='bold' mb='xs'>
+							Search by:
+						</Text>
+						<Button
+							onClick={handleLocationRequest}
+							leftIcon={<IconLocation size={14} />}
+							loading={loading}
+						>
+							Near Me
+						</Button>
 						<TextInput
 							label='Park Name'
 							placeholder=''
@@ -294,7 +357,10 @@ const Search = () => {
 				</form>
 				{/* outputs */}
 				<div className='flex-grow overflow-y-scroll'>
-					<div className='flex flex-wrap items-center justify-center mb-8'>
+					<div
+						className='flex flex-wrap items-center justify-center mb-8'
+						ref={resultRef}
+					>
 						{result &&
 							result.map((park) => {
 								return <NewCard park={park} key={park.ID} />
