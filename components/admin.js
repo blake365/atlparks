@@ -1,8 +1,6 @@
-import { use, useState } from 'react'
+import { useState } from 'react'
 import { Dialog } from '@headlessui/react'
 import { Formik, Form, Field, ErrorMessage } from 'formik'
-
-import styles from './park/park.module.css'
 
 import { supabase } from '../config/config'
 
@@ -42,8 +40,8 @@ export default function Admin({ parks }) {
 					<div className='fixed inset-0 bg-black/30' aria-hidden='true' />
 
 					<div className='fixed inset-0 overflow-y-auto'>
-						<div className='flex min-h-full items-center justify-center p-4 text-center'>
-							<Dialog.Panel className='w-full max-w-md transform overflow-hidden rounded-xl bg-white p-6 text-left align-middle shadow-xl transition-all'>
+						<div className='flex items-center justify-center min-h-full p-4 text-center'>
+							<Dialog.Panel className='w-full max-w-md p-6 overflow-hidden text-left align-middle transition-all transform bg-white shadow-xl rounded-xl'>
 								{onePark ? (
 									<div>
 										<Dialog.Title>Edit data for: {onePark.Name}</Dialog.Title>
@@ -171,13 +169,13 @@ export default function Admin({ parks }) {
 													<Field type='number' name='likes' />
 													<div className='flex flex-row justify-center '>
 														<button
-															className='w-auto bg-blue-500 text-white px-2 my-2 rounded-md hover:bg-blue-600'
+															className='w-auto px-2 my-2 text-white bg-blue-500 rounded-md hover:bg-blue-600'
 															type='submit'
 														>
 															Submit
 														</button>
 														<button
-															className='bg-slate-200 p-2 m-2 px-2 my-2 rounded-md hover:bg-slate-300'
+															className='p-2 px-2 m-2 my-2 rounded-md bg-slate-200 hover:bg-slate-300'
 															onClick={() => setIsOpen(false)}
 														>
 															Cancel
@@ -195,11 +193,11 @@ export default function Admin({ parks }) {
 					</div>
 				</Dialog>
 
-				<h1 className='text-xl flex justify-center m-4'>
+				<h1 className='flex justify-center m-4 text-xl'>
 					Park Data Management
 				</h1>
 				<div className='m-2'>
-					<table className='table-auto text-sm'>
+					<table className='text-sm table-auto'>
 						<thead>
 							<tr>
 								<th>Name</th>
@@ -235,7 +233,7 @@ export default function Admin({ parks }) {
 										setPark(park)
 										setIsOpen(true)
 									}}
-									className='hover:bg-blue-300 border rounded-md p-2 m-2'
+									className='p-2 m-2 border rounded-md hover:bg-blue-300'
 								>
 									<td>{park.Name}</td>
 									<td>{park.Address}</td>

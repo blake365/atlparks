@@ -1,10 +1,25 @@
 import { Stack, Text, Card } from '@mantine/core'
 import Link from 'next/link'
-// import { Card, Typography, Space } from '@supabase/ui'
 import { supabase } from '../../config/config'
 import { useEffect, useState } from 'react'
+import Feedback from '../../components/feedback'
 
-export default function Profile() {
+/* TODO: dashboard design:
+sidebar with parks list, feedback, picture upload pages
+parks list with table of park details
+edit interface for existing parks
+add new park form
+
+feedback page
+show list of feedbacks
+set feedbacks status
+delete feedbacks
+
+picture upload interface
+upload form 
+
+*/
+export default function Dashboard() {
 	const [user, setUser] = useState()
 
 	useEffect(() => {
@@ -17,21 +32,19 @@ export default function Profile() {
 		}
 		// fetchUser()
 		fetchUser().then((data) => {
-			// console.log(data)
+			console.log(data)
 			setUser(data)
 		})
 	}, [])
 
 	return (
-		<div style={{ maxWidth: '420px', margin: '96px auto' }}>
+		<div style={{ margin: 'auto' }}>
 			<Card>
 				<Stack>
-					<Text>You're signed in</Text>
+					<Text>Admin Dashboard</Text>
 					<Text>Email: {user?.email}</Text>
 
-					<Text>
-						<pre>{JSON.stringify(user, null, 2)}</pre>
-					</Text>
+					<Feedback />
 				</Stack>
 			</Card>
 		</div>
