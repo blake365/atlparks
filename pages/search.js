@@ -9,11 +9,15 @@ import {
 	Textarea,
 	Button,
 	MultiSelect,
+	NumberInput,
+	Group,
+	Alert,
 } from '@mantine/core'
 
 import { IconLocation } from '@tabler/icons'
 import { supabase } from '../config/config'
 import { NewCard } from '../components/newcard'
+import Head from 'next/head'
 
 function addSeparator(str) {
 	return str.split(' ').join(' | ')
@@ -25,7 +29,7 @@ const Search = () => {
 
 	const [latitude, setLat] = useState(null)
 	const [longitude, setLong] = useState(null)
-	// const [radius, setRadius] = useState(500)
+	const [radius, setRadius] = useState(1)
 
 	const resultRef = useRef(null)
 
@@ -49,10 +53,10 @@ const Search = () => {
 	})
 
 	useEffect(() => {
-		const storedValue = window.localStorage.getItem('user-form')
+		const storedValue = window.sessionStorage.getItem('user-form')
 		if (storedValue) {
 			try {
-				form.setValues(JSON.parse(window.localStorage.getItem('user-form')))
+				form.setValues(JSON.parse(window.sessionStorage.getItem('user-form')))
 			} catch (e) {
 				console.log('Failed to parse stored value')
 			}
@@ -60,18 +64,10 @@ const Search = () => {
 	}, [])
 
 	useEffect(() => {
-		window.localStorage.setItem('user-form', JSON.stringify(form.values))
+		window.sessionStorage.setItem('user-form', JSON.stringify(form.values))
 	}, [form.values])
 
 	const submitForm = async (values) => {
-		// create search statement
-		// start loading
-		// if nothing provided, don't search
-		// if a park name is provided, ignore all other fields, set them to false, only search by name
-		// if a description is provided, use full text search, apply separator
-		// if an address is provided, use full text search, apply separator
-		// if classification provided, add to search parameters
-		// if npu or district is added, add to search parameters
 		setLoading(true)
 
 		const filterByName = values.park
@@ -146,7 +142,7 @@ const Search = () => {
 	const handleLocationRequest = async (evt) => {
 		evt.preventDefault()
 		setLoading(true)
-		let radius = 1
+		// let radius = 1
 		navigator.geolocation.getCurrentPosition((position) => {
 			setLat(position.coords.latitude)
 			setLong(position.coords.longitude)
@@ -172,7 +168,7 @@ const Search = () => {
 				return miles / (69.17 * Math.cos(lat))
 			}
 
-			const box = createBoundingBox(latitude, longitude, 1)
+			const box = createBoundingBox(latitude, longitude, radius)
 			console.log(box)
 
 			const { data, error } = await supabase.rpc('parks_near_me', {
@@ -191,6 +187,13 @@ const Search = () => {
 
 	return (
 		<main className='w-11/12 pb-4 mx-auto'>
+			<Head>
+				<title>Search for a Park in Atlanta, Georgia</title>
+				<meta
+					name='viewport'
+					content='width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no'
+				/>
+			</Head>
 			<Title align='center' mt='sm'>
 				Find a Park
 			</Title>
@@ -198,19 +201,31 @@ const Search = () => {
 				{/* inputs */}
 				<form
 					onSubmit={form.onSubmit((values) => submitForm(values))}
-					className='flex-shrink-0 mx-auto sm:w-70 w-80'
+					className='mx-auto sm:flex-shrink-0 sm:w-80 w-96'
 				>
-					<div className='flex flex-col'>
+					<div className='flex flex-col '>
 						<Text weight='bold' mb='xs'>
 							Search by:
 						</Text>
-						<Button
-							onClick={handleLocationRequest}
-							leftIcon={<IconLocation size={14} />}
-							loading={loading}
-						>
-							Near Me
-						</Button>
+						<Group spacing='xs' align='end' position='center'>
+							<NumberInput
+								w={130}
+								min={1}
+								max={5}
+								step={1}
+								value={radius}
+								onChange={(val) => setRadius(val)}
+								size='sm'
+								label='radius (miles)'
+							/>
+							<Button
+								onClick={handleLocationRequest}
+								leftIcon={<IconLocation size={14} />}
+								loading={loading}
+							>
+								Near Me
+							</Button>
+						</Group>
 						<TextInput
 							label='Park Name'
 							placeholder=''
@@ -358,9 +373,21 @@ const Search = () => {
 				{/* outputs */}
 				<div className='flex-grow overflow-y-scroll'>
 					<div
-						className='flex flex-wrap items-center justify-center mb-8'
+						className='flex flex-wrap items-center justify-center mt-4 mb-8'
 						ref={resultRef}
 					>
+						<div className='w-3/5 mx-auto'>
+							{result.length < 1 ? (
+								<Alert color='red' title='0 Parks Found'></Alert>
+							) : (
+								<Alert
+									color='green'
+									title={`${result.length} Park${
+										result.length === 1 ? '' : 's'
+									} Found`}
+								></Alert>
+							)}
+						</div>
 						{result &&
 							result.map((park) => {
 								return <NewCard park={park} key={park.ID} />
