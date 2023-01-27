@@ -1,7 +1,7 @@
 import { Stack, Text, Card } from '@mantine/core'
 import Link from 'next/link'
 // import { Card, Typography, Space } from '@supabase/ui'
-import { supabase } from '../../config/config'
+import { supabase } from '../config/config'
 import { useEffect, useState } from 'react'
 
 export default function Profile() {
@@ -28,10 +28,10 @@ export default function Profile() {
 				<Stack>
 					<Text>You're signed in</Text>
 					<Text>Email: {user?.email}</Text>
-
+					{/* 
 					<Text>
 						<pre>{JSON.stringify(user, null, 2)}</pre>
-					</Text>
+					</Text> */}
 				</Stack>
 			</Card>
 		</div>
