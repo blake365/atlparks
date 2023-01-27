@@ -125,7 +125,7 @@ async function updateLikes(id, currentLikes) {
 	// console.log(id, currentLikes)
 	const newLikes = currentLikes + 1
 	const result = await supabase
-		.from('parks')
+		.from('likes')
 		.update({ likes: newLikes })
 		.eq('ID', id)
 		.select()
@@ -278,7 +278,7 @@ const Park = ({ parkData, pictures }) => {
 		const fetchLikes = async () => {
 			if (id) {
 				let { data: parks, error } = await supabase
-					.from('parks')
+					.from('likes')
 					.select('likes')
 					.eq('ID', id)
 				// console.log('data', parks[0].likes)

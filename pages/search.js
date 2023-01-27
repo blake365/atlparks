@@ -172,6 +172,8 @@ const Search = () => {
 			console.log(box)
 
 			const { data, error } = await supabase.rpc('parks_near_me', {
+				lat: latitude,
+				long: longitude,
 				min_lat: box.south,
 				min_long: box.west,
 				max_lat: box.north,
