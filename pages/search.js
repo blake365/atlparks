@@ -24,7 +24,7 @@ function addSeparator(str) {
 }
 
 const Search = () => {
-	const [result, setResult] = useState([])
+	const [result, setResult] = useState(null)
 	const [loading, setLoading] = useState(false)
 
 	const [latitude, setLat] = useState(null)
@@ -376,9 +376,16 @@ const Search = () => {
 						className='flex flex-wrap items-center justify-center mt-4 mb-8'
 						ref={resultRef}
 					>
-						<div className='w-3/5 mx-auto'>
-							{result.length < 1 ? (
-								<Alert color='red' title='0 Parks Found'></Alert>
+						<div className='w-4/5 mx-auto'>
+							{!result ? (
+								<Alert color='blue' title='Explore Parks'>
+									Try a combination of filters and search terms to find the
+									perfect park
+								</Alert>
+							) : result.length === 0 ? (
+								<Alert color='red' title='0 Parks Found'>
+									Try a new combination of filters
+								</Alert>
 							) : (
 								<Alert
 									color='green'
