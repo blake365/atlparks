@@ -5,7 +5,7 @@ import GMap from '../components/map'
 import Marker from '../components/marker'
 import { Wrapper } from '@googlemaps/react-wrapper'
 
-import { Paper, Autocomplete, Group, Button } from '@mantine/core'
+import { Title } from '@mantine/core'
 
 import { supabase } from '../config/config'
 import { useEffect, useState } from 'react'
@@ -16,7 +16,7 @@ export async function getStaticProps() {
 	let { data: parks, error } = await supabase
 		.from('parks')
 		.select('*')
-		.gt('Acreage', 2)
+		.is('favorite', true)
 		.order('ID', { ascending: true })
 
 	if (error) {
@@ -30,9 +30,9 @@ export async function getStaticProps() {
 	}
 }
 
-const render = (status) => {
-	return <h1>{status}</h1>
-}
+// const render = (status) => {
+// 	return <h1>{status}</h1>
+// }
 
 // const handleClick = () => {
 // 	console.log(park.ID)
@@ -40,24 +40,6 @@ const render = (status) => {
 // }
 
 export default function Home({ parks }) {
-	const router = useRouter()
-
-	const [search, setSearch] = useState('')
-	const [searchID, setSearchID] = useState('')
-
-	const searchGo = () => {
-		// console.log(parks)
-		// console.log(search)
-	}
-
-	useEffect(() => {
-		const filtered = parks.filter((item) => item.Name === search)
-		// console.log(filtered)
-		if (filtered.length > 0) {
-			setSearchID(filtered[0].ID)
-		}
-	}, [search, parks])
-
 	return (
 		<div className='pt-0 pb-8'>
 			<Head>
@@ -67,16 +49,14 @@ export default function Home({ parks }) {
 			</Head>
 			<HeroContentLeft />
 			<main className='flex flex-col items-center justify-center flex-1 w-11/12 pb-4 mx-auto min-h-100'>
-				<h1>Featured Parks</h1>
+				<Title>Featured Parks</Title>
 				<div className='flex flex-wrap items-center justify-center max-w-[960px] mb-8'>
 					{parks.map((park) => {
-						if (park.favorite) {
-							return <NewCard park={park} key={park.ID} />
-						}
+						return <NewCard park={park} key={park.ID} />
 					})}
 				</div>
 				{/* <div>Map of all ATL park locations?</div> */}
-				<Paper
+				{/* <Paper
 					shadow='lg'
 					radius='md'
 					m='md'
@@ -117,7 +97,7 @@ export default function Home({ parks }) {
 							})}
 						</GMap>
 					</Wrapper>
-				</Paper>
+				</Paper> */}
 			</main>
 		</div>
 	)

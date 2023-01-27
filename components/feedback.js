@@ -5,7 +5,6 @@ import {
 	ScrollArea,
 	Title,
 	ActionIcon,
-	Badge,
 } from '@mantine/core'
 import { supabase } from '../config/config'
 
@@ -38,40 +37,24 @@ const useStyles = createStyles((theme) => ({
 	},
 }))
 
-// TODO: add link to park page, add link to edit interface
+// TODO:  add link to edit interface
 // add ability to change status
-// color code by status?
 // delete button functionality, add are you sure modal
-
-const badgeColor = (status) => {
-	let color = 'blue'
-	switch (status) {
-		case 'new':
-			color = 'blue'
-			break
-		case 'viewed':
-			color = 'yellow'
-			break
-		case 'added':
-			color = 'green'
-			break
-		case 'rejected':
-			color = 'red'
-			break
-
-		default:
-			break
-	}
-
-	return color
-}
 
 export default function Feedback() {
 	const { classes, cx } = useStyles()
 	const [scrolled, setScrolled] = useState(false)
 	const [feedback, setFeedback] = useState([])
+	// const [status, setStatus] = useState('')
 
-	useEffect(() => {
+	const deleteFeedback = async (id) => {
+		// update status in db
+		// console.log(id)
+		const { error } = await supabase.from('feedback').delete().eq('id', id)
+		// .select()
+		if (error) {
+			console.error(error)
+		}
 		const fetchFeedback = async () => {
 			const { data, error } = await supabase.from('feedback').select(`id, 
                 park, created_at, text, status,
@@ -79,7 +62,6 @@ export default function Feedback() {
                 Name
                 )
             `)
-
 			// console.log(data)
 			if (error) {
 				console.error(error)
@@ -89,7 +71,29 @@ export default function Feedback() {
 		}
 
 		fetchFeedback().then((data) => {
+			console.log(data)
+			setFeedback(data)
+		})
+	}
+
+	useEffect(() => {
+		const fetchFeedback = async () => {
+			const { data, error } = await supabase.from('feedback').select(`id, 
+                park, created_at, text, status,
+                parks (
+                Name
+                )
+            `)
 			// console.log(data)
+			if (error) {
+				console.error(error)
+			}
+
+			return data
+		}
+
+		fetchFeedback().then((data) => {
+			console.log(data)
 			setFeedback(data)
 		})
 	}, [])
@@ -105,11 +109,20 @@ export default function Feedback() {
 			</td>
 			<td>{row.created_at.split('T')[0]}</td>
 			<td>{row.text}</td>
-			<td>
-				<Badge color={badgeColor(row.status)}>{row.status}</Badge>
-			</td>
+			{/* <td>
+				<Select
+					placeholder={row.status}
+					onChange={(value) => statusChange(row.id, value)}
+					data={statuses}
+				/>
+			</td> */}
 			<td className=''>
-				<ActionIcon color='red' variant='outline' size='sm'>
+				<ActionIcon
+					color='red'
+					variant='outline'
+					size='sm'
+					onClick={() => deleteFeedback(row.id)}
+				>
 					<IconTrash />
 				</ActionIcon>
 			</td>
@@ -132,7 +145,7 @@ export default function Feedback() {
 							<th>Park Name</th>
 							<th>Date Created</th>
 							<th>Feedback</th>
-							<th>Status</th>
+							{/* <th>Status</th> */}
 							<th>Delete</th>
 						</tr>
 					</thead>

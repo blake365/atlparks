@@ -37,8 +37,8 @@ import Card from '../../components/card'
 import Marker from '../../components/marker'
 
 import { Classifications } from '../../config/classifications'
-import Feedback from '../../components/feedback'
 import { NewCard } from '../../components/newcard'
+import SubmitFeedback from '../../components/submitfeedback'
 
 const useStyles = createStyles((theme) => ({
 	inner: {
@@ -521,7 +521,7 @@ const Park = ({ parkData, pictures }) => {
 								)}
 							</div>
 
-							<Feedback id={park.ID} />
+							<SubmitFeedback id={park.ID} />
 
 							{pictures.length > 1 && (
 								<Text color='' size='xl' fw='bold'>

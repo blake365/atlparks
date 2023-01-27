@@ -4,7 +4,9 @@ import { supabase } from '../config/config';
 
 import ReCAPTCHA from 'react-google-recaptcha';
 
-const Feedback = ({ id }) =>
+//TODO: show user that it submitted successfully 
+
+const SubmitFeedback = ({ id }) =>
 {
     const [opened, setOpened] = useState(false);
     const [feedback, setFeedback] = useState('')
@@ -89,4 +91,4 @@ const Feedback = ({ id }) =>
 }
 
 
-export default Feedback
+export default SubmitFeedback
