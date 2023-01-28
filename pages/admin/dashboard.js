@@ -1,8 +1,9 @@
-import { Stack, Text, Card } from '@mantine/core'
+import { Stack, Text, Card, Container } from '@mantine/core'
 import Link from 'next/link'
 import { supabase } from '../../config/config'
 import { useEffect, useState } from 'react'
 import Feedback from '../../components/feedback'
+import ParkTable from '../../components/parktable'
 
 /* TODO: dashboard design:
 sidebar with parks list, feedback, picture upload pages
@@ -39,14 +40,14 @@ export default function Dashboard() {
 
 	return (
 		<div style={{ margin: 'auto' }}>
-			<Card>
+			<Container>
 				<Stack>
 					<Text>Admin Dashboard</Text>
 					<Text>Email: {user?.email}</Text>
-
+					<ParkTable />
 					<Feedback />
 				</Stack>
-			</Card>
+			</Container>
 		</div>
 	)
 }

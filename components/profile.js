@@ -26,7 +26,7 @@ export default function Profile() {
 		<div style={{ maxWidth: '420px', margin: '96px auto' }}>
 			<Card>
 				<Stack>
-					<Text>You're signed in</Text>
+					<Text>Signed in</Text>
 					<Text>Email: {user?.email}</Text>
 					{/* 
 					<Text>

@@ -133,7 +133,7 @@ export default function Feedback() {
 		<div>
 			<Title order={2}>User Feedback</Title>
 			<ScrollArea
-				sx={{ minHeight: 300 }}
+				sx={{ minHeight: 300, maxHeight: 500 }}
 				onScrollPositionChange={({ y }) => setScrolled(y !== 0)}
 			>
 				<Table sx={{ minWidth: 700 }}>

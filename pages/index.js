@@ -49,7 +49,7 @@ export default function Home({ parks }) {
 			</Head>
 			<HeroContentLeft />
 			<main className='flex flex-col items-center justify-center flex-1 w-11/12 pb-4 mx-auto min-h-100'>
-				<Title>Featured Parks</Title>
+				<Title mt='lg'>Featured Parks</Title>
 				<div className='flex flex-wrap items-center justify-center max-w-[960px] mb-8'>
 					{parks.map((park) => {
 						return <NewCard park={park} key={park.ID} />
