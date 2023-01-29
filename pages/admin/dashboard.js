@@ -18,7 +18,6 @@ delete feedbacks
 
 picture upload interface
 upload form 
-
 */
 export default function Dashboard() {
 	const [user, setUser] = useState()
@@ -41,12 +40,15 @@ export default function Dashboard() {
 	return (
 		<div style={{ margin: 'auto' }}>
 			<Container>
-				<Stack>
-					<Text>Admin Dashboard</Text>
-					<Text>Email: {user?.email}</Text>
-					<ParkTable />
-					<Feedback />
-				</Stack>
+				{user ? (
+					<Stack>
+						<Text>Admin Dashboard</Text>
+						<ParkTable />
+						<Feedback />
+					</Stack>
+				) : (
+					<Text>You must log in to access this page</Text>
+				)}
 			</Container>
 		</div>
 	)

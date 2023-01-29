@@ -68,3 +68,46 @@ export const setColor = (data) =>
 
 	return color
 }
+
+// Check for incomplete information
+export const incompleteCheck = (park) =>
+{
+	let incomplete = false
+
+	if (
+		!park.latitude ||
+		!park.longitude ||
+		!park.Address ||
+		!park.Classification ||
+		!park.Name ||
+		!park.Zip_Code ||
+		!park.Acreage
+	) {
+		incomplete = true
+	}
+
+	if (
+		!park.play &&
+		!park.basketball &&
+		!park.field &&
+		!park.tennis &&
+		!park.pavilion &&
+		!park.pool &&
+		!park.dog &&
+		!park.skate &&
+		park.Classification !== 'Nature Preserve' &&
+		park.Classification !== 'Greenspot'
+	) {
+		incomplete = true
+	}
+
+	if (
+		!park.description &&
+		park.Classification !== 'Greenspot' &&
+		park.Classification !== 'Park in Holding'
+	) {
+		incomplete = true
+	}
+
+	return incomplete
+}

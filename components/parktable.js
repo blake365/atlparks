@@ -9,7 +9,6 @@ import {
 	Checkbox,
 	MultiSelect,
 	Button,
-	Text,
 	Drawer,
 } from '@mantine/core'
 import { supabase } from '../config/config'
@@ -17,6 +16,9 @@ import { supabase } from '../config/config'
 import { useForm } from '@mantine/form'
 
 import { IconAlertTriangle, IconEdit } from '@tabler/icons'
+import DrawerContents from './drawercontents'
+
+import { incompleteCheck } from '../utils/functions.jsx'
 
 const useStyles = createStyles((theme) => ({
 	header: {
@@ -48,48 +50,6 @@ const useStyles = createStyles((theme) => ({
 
 const drawerContents = (park) => {}
 
-// Check for incomplete information
-const incompleteCheck = (park) => {
-	let incomplete = false
-
-	if (
-		!park.latitude ||
-		!park.longitude ||
-		!park.Address ||
-		!park.Classification ||
-		!park.Name ||
-		!park.Zip_Code ||
-		!park.Acreage
-	) {
-		incomplete = true
-	}
-
-	if (
-		!park.play &&
-		!park.basketball &&
-		!park.field &&
-		!park.tennis &&
-		!park.pavilion &&
-		!park.pool &&
-		!park.dog &&
-		!park.skate &&
-		park.Classification !== 'Nature Preserve' &&
-		park.Classification !== 'Greenspot'
-	) {
-		incomplete = true
-	}
-
-	if (
-		!park.description &&
-		park.Classification !== 'Greenspot' &&
-		park.Classification !== 'Park in Holding'
-	) {
-		incomplete = true
-	}
-
-	return incomplete
-}
-
 // TODO:  add link to edit interface
 // add filter by lack of information
 
@@ -100,6 +60,8 @@ export default function ParkTable() {
 	const [loading, setLoading] = useState(false)
 	const [selected, setSelected] = useState(null)
 	const [opened, setOpened] = useState(false)
+
+	// console.log(selected)
 
 	const form = useForm({
 		initialValues: {
@@ -116,6 +78,7 @@ export default function ParkTable() {
 			skate: false,
 		},
 	})
+
 	// const [status, setStatus] = useState('')
 
 	useEffect(() => {
@@ -223,18 +186,18 @@ export default function ParkTable() {
 
 	return (
 		<div>
+			<Drawer
+				opened={opened}
+				onClose={() => setOpened(false)}
+				title={`Edit ${selected?.Name}`}
+				padding='xl'
+				size='xl'
+				position='right'
+			>
+				<DrawerContents selected={selected} />
+			</Drawer>
 			<Title order={2}>Park Data Management</Title>
 			<div>
-				<Drawer
-					opened={opened}
-					onClose={() => setOpened(false)}
-					title='Edit Park'
-					padding='xl'
-					size='xl'
-					position='right'
-				>
-					{' '}
-				</Drawer>
 				<form onSubmit={form.onSubmit((values) => submitForm(values))}>
 					<div className='flex flex-col'>
 						<div className='flex flex-row justify-start flex-shrink space-x-2'>
@@ -315,49 +278,41 @@ export default function ParkTable() {
 							<Checkbox
 								label='Playground'
 								{...form.getInputProps('play', { type: 'checkbox' })}
-								disabled={form.values.park}
 								size='xs'
 							/>
 							<Checkbox
 								label='Fields'
 								{...form.getInputProps('field', { type: 'checkbox' })}
-								disabled={form.values.park}
 								size='xs'
 							/>
 							<Checkbox
 								label='Basketball'
 								{...form.getInputProps('basketball', { type: 'checkbox' })}
-								disabled={form.values.park}
 								size='xs'
 							/>
 							<Checkbox
 								label='Tennis'
 								{...form.getInputProps('tennis', { type: 'checkbox' })}
-								disabled={form.values.park}
 								size='xs'
 							/>
 							<Checkbox
 								label='Pavilion'
 								{...form.getInputProps('pavilion', { type: 'checkbox' })}
-								disabled={form.values.park}
 								size='xs'
 							/>
 							<Checkbox
 								label='Pool / Splash Pad'
 								{...form.getInputProps('pool', { type: 'checkbox' })}
-								disabled={form.values.park}
 								size='xs'
 							/>
 							<Checkbox
 								label='Dog Park'
 								{...form.getInputProps('dog', { type: 'checkbox' })}
-								disabled={form.values.park}
 								size='xs'
 							/>
 							<Checkbox
 								label='Skate Park'
 								{...form.getInputProps('skate', { type: 'checkbox' })}
-								disabled={form.values.park}
 								size='xs'
 							/>
 						</div>
