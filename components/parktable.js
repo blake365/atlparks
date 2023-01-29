@@ -19,6 +19,7 @@ import { IconAlertTriangle, IconEdit } from '@tabler/icons'
 import DrawerContents from './drawercontents'
 
 import { incompleteCheck } from '../utils/functions.jsx'
+import Link from 'next/link'
 
 const useStyles = createStyles((theme) => ({
 	header: {
@@ -172,7 +173,11 @@ export default function ParkTable() {
 					''
 				)}
 			</td>
-			<td>{row.Name} </td>
+			<td>
+				<Link href={`/park/${row.ID}`} className='hover:underline'>
+					{row.Name}
+				</Link>{' '}
+			</td>
 			<td>{row.Address}</td>
 			<td>{row.Acreage}</td>
 			<td>{row.Classification}</td>

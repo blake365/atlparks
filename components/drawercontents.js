@@ -10,51 +10,92 @@ import {
 import { supabase } from '../config/config'
 
 import { useForm } from '@mantine/form'
+import { useState } from 'react'
 
 function DrawerContents({ selected }) {
-	// console.log(selected)
+	const [loading, setLoading] = useState(false)
+
+	console.log(selected)
 	const editform = useForm({
 		initialValues: {
-			name: selected?.Name,
-			address: selected?.Address,
-			acreage: selected?.Acreage,
-			zipcode: selected?.Zip_Code,
-			npu: selected?.NPU,
-			district: String(selected?.Council_District),
+			Name: selected?.Name,
+			Address: selected?.Address,
+			Acreage: selected?.Acreage,
+			Zip_Code: selected?.Zip_Code,
+			NPU: selected?.NPU,
+			Council_District: selected?.Council_District,
 			latitude: selected?.latitude,
 			longitude: selected?.longitude,
-			classification: selected?.Classification,
+			Classification: selected?.Classification,
 			description: selected?.description,
-			play: selected?.Playground,
-			field: selected?.Fields,
-			basketball: selected?.Basketball,
-			tennis: selected?.Tennis,
-			pavilion: selected?.Pavilion,
-			pool: selected?.Splash_pad,
-			dog: selected?.Dog_park,
-			skate: selected?.skate_park,
+			Playground: selected?.Playground,
+			Fields: selected?.Fields,
+			Basketball: selected?.Basketball,
+			Tennis: selected?.Tennis,
+			Pavilion: selected?.Pavilion,
+			Splash_pad: selected?.Splash_pad,
+			Dog_park: selected?.Dog_park,
+			Skate_park: selected?.Skate_park,
 			favorite: selected?.favorite,
 		},
 	})
 
+	const submitForm = async (values) => {
+		setLoading(true)
+		// values.Council_District = Number(values.Council_District)
+		// console.log(selected.ID)
+		console.log(values)
+		// console.log(values)
+		const { status, data, error } = await supabase
+			.from('parks')
+			.update({
+				Name: values.Name,
+				Address: values.Address,
+				Acreage: values.Acreage,
+				Classification: values.Classification,
+				NPU: values.NPU,
+				Council_District: values.Council_District,
+				Zip_Code: values.Zip_Code,
+				latitude: values.latitude,
+				longitude: values.longitude,
+				Playground: values.Playground,
+				Splash_pad: values.Splash_pad,
+				Dog_park: values.Dog_park,
+				Fields: values.Fields,
+				Basketball: values.Basketball,
+				Tennis: values.Tennis,
+				Pavilion: values.Pavilion,
+				Skate_park: values.Skate_park,
+				description: values.description,
+				favorite: values.favorite,
+			})
+			.eq('ID', selected.ID)
+			.select()
+
+		console.log(error)
+		console.log(status)
+		console.log(data)
+		setLoading(false)
+	}
+
 	return (
-		<form onSubmit={editform.onSubmit((values) => console.log(values))}>
+		<form onSubmit={editform.onSubmit((values) => submitForm(values))}>
 			<TextInput
 				label='Park Name'
 				placeholder={selected?.Name}
-				{...editform.getInputProps('name')}
+				{...editform.getInputProps('Name')}
 				size='xs'
 			/>
 			<TextInput
 				label='Address'
 				placeholder={selected?.Address}
-				{...editform.getInputProps('address')}
+				{...editform.getInputProps('Address')}
 				size='xs'
 			/>
 			<NumberInput
 				label='Acreage'
 				placeholder={selected?.Acreage}
-				{...editform.getInputProps('acreage')}
+				{...editform.getInputProps('Acreage')}
 				size='xs'
 				precision={2}
 			/>
@@ -72,7 +113,7 @@ function DrawerContents({ selected }) {
 				]}
 				placeholder={selected?.Classification}
 				label='Classification'
-				{...editform.getInputProps('classification')}
+				{...editform.getInputProps('Classification')}
 				clearable
 				size='xs'
 			/>
@@ -106,22 +147,22 @@ function DrawerContents({ selected }) {
 				]}
 				placeholder={selected?.NPU}
 				label='Neighborhood Planning Unit'
-				{...editform.getInputProps('npu')}
+				{...editform.getInputProps('NPU')}
 				clearable
 				size='xs'
 			/>
 			<Select
-				data={['1', '2', '3', '4', '5', '6', '7', '8', '9', '10', '11', '12']}
+				data={[1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12]}
 				placeholder={selected?.Council_District}
 				label='City Council District'
-				{...editform.getInputProps('district')}
+				{...editform.getInputProps('Council_District')}
 				clearable
 				size='xs'
 			/>
 			<NumberInput
 				label='Zip Code'
 				placeholder={selected?.Zip_Code}
-				{...editform.getInputProps('zipcode')}
+				{...editform.getInputProps('Zip_Code')}
 				size='xs'
 			/>
 			<NumberInput
@@ -142,51 +183,51 @@ function DrawerContents({ selected }) {
 			<div className='flex flex-row flex-wrap p-2 justify-evenly'>
 				<Checkbox
 					label='Playground'
-					{...editform.getInputProps('play', { type: 'checkbox' })}
+					{...editform.getInputProps('Playground', { type: 'checkbox' })}
 					size='xs'
-					checked={selected.Playground}
+					checked={selected?.Playground}
 				/>
 				<Checkbox
 					label='Fields'
-					{...editform.getInputProps('field', { type: 'checkbox' })}
+					{...editform.getInputProps('Fields', { type: 'checkbox' })}
 					size='xs'
-					checked={selected.Fields}
+					checked={selected?.Fields}
 				/>
 				<Checkbox
 					label='Basketball'
-					{...editform.getInputProps('basketball', { type: 'checkbox' })}
+					{...editform.getInputProps('Basketball', { type: 'checkbox' })}
 					size='xs'
-					checked={selected.Basketball}
+					checked={selected?.Basketball}
 				/>
 				<Checkbox
 					label='Tennis'
-					{...editform.getInputProps('tennis', { type: 'checkbox' })}
+					{...editform.getInputProps('Tennis', { type: 'checkbox' })}
 					size='xs'
-					checked={selected.Tennis}
+					checked={selected?.Tennis}
 				/>
 				<Checkbox
 					label='Pavilion'
-					{...editform.getInputProps('pavilion', { type: 'checkbox' })}
+					{...editform.getInputProps('Pavilion', { type: 'checkbox' })}
 					size='xs'
-					checked={selected.Pavilion}
+					checked={selected?.Pavilion}
 				/>
 				<Checkbox
 					label='Pool / Splash Pad'
-					{...editform.getInputProps('pool', { type: 'checkbox' })}
+					{...editform.getInputProps('Splash_pad', { type: 'checkbox' })}
 					size='xs'
-					checked={selected.Splash_pad}
+					checked={selected?.Splash_pad}
 				/>
 				<Checkbox
 					label='Dog Park'
-					{...editform.getInputProps('dog', { type: 'checkbox' })}
+					{...editform.getInputProps('Dog_park', { type: 'checkbox' })}
 					size='xs'
-					checked={selected.Dog_park}
+					checked={selected?.Dog_park}
 				/>
 				<Checkbox
 					label='Skate Park'
-					{...editform.getInputProps('skate', { type: 'checkbox' })}
+					{...editform.getInputProps('Skate_park', { type: 'checkbox' })}
 					size='xs'
-					checked={selected.skate_park}
+					checked={selected?.Skate_park}
 				/>
 			</div>
 			<Textarea
@@ -208,6 +249,7 @@ function DrawerContents({ selected }) {
 				<Button
 					className='w-auto px-2 my-2 text-white bg-blue-500 rounded-md hover:bg-blue-600'
 					type='submit'
+					loading={loading}
 				>
 					Submit
 				</Button>
