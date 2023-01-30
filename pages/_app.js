@@ -24,9 +24,9 @@ function MyApp({ Component, pageProps }) {
 			>
 				<HeaderResponsive
 					links={[
-						{ link: '/about', label: 'About' },
 						{ link: '/search', label: 'Find a Park' },
-						{ link: '/contribute', label: 'Contribute' },
+						{ link: '/about', label: 'About' },
+						{ link: '/admin/dashboard', label: 'Admin' },
 					]}
 				/>
 				<Component {...pageProps} />

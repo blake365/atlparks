@@ -32,14 +32,14 @@ export default function Dashboard() {
 		}
 		// fetchUser()
 		fetchUser().then((data) => {
-			console.log(data)
+			// console.log(data)
 			setUser(data)
 		})
 	}, [])
 
 	return (
 		<div style={{ margin: 'auto' }}>
-			<Container>
+			<Container size='xl'>
 				{user ? (
 					<Stack>
 						<Text>Admin Dashboard</Text>

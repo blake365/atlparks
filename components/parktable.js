@@ -15,11 +15,12 @@ import { supabase } from '../config/config'
 
 import { useForm } from '@mantine/form'
 
-import { IconAlertTriangle, IconEdit } from '@tabler/icons'
+import { IconAlertTriangle, IconEdit, IconPhoto } from '@tabler/icons'
 import DrawerContents from './drawercontents'
 
 import { incompleteCheck } from '../utils/functions.jsx'
 import Link from 'next/link'
+import PhotoDrawer from './drawerphoto'
 
 const useStyles = createStyles((theme) => ({
 	header: {
@@ -61,6 +62,7 @@ export default function ParkTable() {
 	const [loading, setLoading] = useState(false)
 	const [selected, setSelected] = useState(null)
 	const [opened, setOpened] = useState(false)
+	const [drawerType, setDrawerType] = useState('edit')
 
 	// console.log(selected)
 
@@ -162,10 +164,24 @@ export default function ParkTable() {
 					m='xs'
 					onClick={() => {
 						setSelected(row)
+						setDrawerType('edit')
 						setOpened(true)
 					}}
 				>
 					<IconEdit />
+				</ActionIcon>
+				<ActionIcon
+					color='blue'
+					variant='outline'
+					size='sm'
+					m='xs'
+					onClick={() => {
+						setSelected(row)
+						setDrawerType('picture')
+						setOpened(true)
+					}}
+				>
+					<IconPhoto />
 				</ActionIcon>
 				{incompleteCheck(row) ? (
 					<IconAlertTriangle color='red' size={16} />
@@ -199,7 +215,11 @@ export default function ParkTable() {
 				size='xl'
 				position='right'
 			>
-				<DrawerContents selected={selected} />
+				{drawerType === 'edit' ? (
+					<DrawerContents selected={selected} />
+				) : (
+					<PhotoDrawer selected={selected} />
+				)}
 			</Drawer>
 			<Title order={2}>Park Data Management</Title>
 			<div>

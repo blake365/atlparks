@@ -1,7 +1,8 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { createStyles, Header, Container, Group, Burger, Paper, Transition, Text } from '@mantine/core';
 import { useDisclosure } from '@mantine/hooks';
+import { supabase } from '../config/config'
 
 const HEADER_HEIGHT = 60;
 
@@ -83,22 +84,47 @@ export function HeaderResponsive({ links })
     const [active, setActive] = useState(null);
     const { classes, cx } = useStyles();
 
+    const [user, setUser] = useState()
+
+    useEffect(() =>
+    {
+        const fetchUser = async () =>
+        {
+            const {
+                data: { user },
+            } = await supabase.auth.getUser()
+            // console.log(user)
+            return user
+        }
+        // fetchUser()
+        fetchUser().then((data) =>
+        {
+            // console.log(data)
+            setUser(data)
+        })
+    }, [])
+
     const items = links.map((link) =>
     {
-        return (
-            <Link
-                key={link.label}
-                href={link.link}
-                className={cx(classes.link, { [classes.linkActive]: active === link.link })}
-                onClick={() =>
-                {
-                    setActive(link.link);
-                    close()
-                }}
-            >
-                {link.label}
-            </Link>
-        )
+        if (!user && link.label === 'Admin') {
+            return
+        } else {
+            return (
+
+                <Link
+                    key={link.label}
+                    href={link.link}
+                    className={cx(classes.link, { [classes.linkActive]: active === link.link })}
+                    onClick={() =>
+                    {
+                        setActive(link.link);
+                        close()
+                    }}
+                >
+                    {link.label}
+                </Link>
+            )
+        }
     });
 
     return (

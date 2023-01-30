@@ -43,7 +43,7 @@ export default function AdminLogin() {
 		if (error) {
 			return
 		} else if (data.user.aud === 'authenticated') {
-			router.push('/admin/profile')
+			router.push('/admin/dashboard')
 		}
 	}
 
@@ -67,7 +67,7 @@ export default function AdminLogin() {
 					<TextInput
 						required
 						label='Email'
-						placeholder='hello@mantine.dev'
+						placeholder=''
 						value={form.values.email}
 						onChange={(event) =>
 							form.setFieldValue('email', event.currentTarget.value)
@@ -78,7 +78,7 @@ export default function AdminLogin() {
 					<PasswordInput
 						required
 						label='Password'
-						placeholder='Your password'
+						placeholder=''
 						value={form.values.password}
 						onChange={(event) =>
 							form.setFieldValue('password', event.currentTarget.value)

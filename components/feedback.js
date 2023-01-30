@@ -71,7 +71,7 @@ export default function Feedback() {
 		}
 
 		fetchFeedback().then((data) => {
-			console.log(data)
+			// console.log(data)
 			setFeedback(data)
 		})
 	}
@@ -93,7 +93,7 @@ export default function Feedback() {
 		}
 
 		fetchFeedback().then((data) => {
-			console.log(data)
+			// console.log(data)
 			setFeedback(data)
 		})
 	}, [])
