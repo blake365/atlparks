@@ -37,6 +37,7 @@ function DrawerContents({ selected }) {
 			Dog_park: selected?.Dog_park,
 			Skate_park: selected?.Skate_park,
 			favorite: selected?.favorite,
+			website: selected?.website,
 		},
 	})
 
@@ -44,7 +45,7 @@ function DrawerContents({ selected }) {
 		setLoading(true)
 		// values.Council_District = Number(values.Council_District)
 		// console.log(selected.ID)
-		console.log(values)
+		// console.log(values)
 		// console.log(values)
 		const { status, data, error } = await supabase
 			.from('parks')
@@ -68,18 +69,22 @@ function DrawerContents({ selected }) {
 				Skate_park: values.Skate_park,
 				description: values.description,
 				favorite: values.favorite,
+				website: values.website,
 			})
 			.eq('ID', selected.ID)
 			.select()
 
 		console.log(error)
 		console.log(status)
-		console.log(data)
+		// console.log(data)
 		setLoading(false)
 	}
 
 	return (
-		<form onSubmit={editform.onSubmit((values) => submitForm(values))}>
+		<form
+			onSubmit={editform.onSubmit((values) => submitForm(values))}
+			className='overflow-y-scroll'
+		>
 			<TextInput
 				label='Park Name'
 				placeholder={selected?.Name}
@@ -152,7 +157,7 @@ function DrawerContents({ selected }) {
 				size='xs'
 			/>
 			<Select
-				data={[1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12]}
+				data={['1', '2', '3', '4', '5', '6', '7', '8', '9', '10', '11', '12']}
 				placeholder={selected?.Council_District}
 				label='City Council District'
 				{...editform.getInputProps('Council_District')}
@@ -236,7 +241,12 @@ function DrawerContents({ selected }) {
 				{...editform.getInputProps('description')}
 				size='xs'
 			/>
-
+			<TextInput
+				label='Website Address'
+				placeholder={selected?.website}
+				{...editform.getInputProps('website')}
+				size='xs'
+			/>
 			<Checkbox
 				mt='md'
 				label='Favorite'

@@ -96,7 +96,7 @@ export const incompleteCheck = (park) =>
 		!park.dog &&
 		!park.skate &&
 		park.Classification !== 'Nature Preserve' &&
-		park.Classification !== 'Greenspot'
+		park.Classification !== 'Greenspot' && park.Classification !== 'Playlot'
 	) {
 		incomplete = true
 	}

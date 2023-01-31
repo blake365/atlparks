@@ -50,9 +50,7 @@ const useStyles = createStyles((theme) => ({
 	},
 }))
 
-const drawerContents = (park) => {}
-
-// TODO:  add link to edit interface
+// TODO:
 // add filter by lack of information
 
 export default function ParkTable() {
@@ -344,13 +342,13 @@ export default function ParkTable() {
 					</div>
 					<div>
 						<Button type='submit' loading={loading} mt='sm'>
-							Filter
+							Filter / Refresh
 						</Button>
 					</div>
 				</form>
 			</div>
 			<ScrollArea
-				sx={{ minHeight: 300, height: 900 }}
+				sx={{ minHeight: 300, height: 700 }}
 				onScrollPositionChange={({ y }) => setScrolled(y !== 0)}
 			>
 				<Table sx={{ minWidth: 700 }}>
