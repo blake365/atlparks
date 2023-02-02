@@ -86,20 +86,20 @@ export const incompleteCheck = (park) =>
 		incomplete = true
 	}
 
-	if (
-		!park.play &&
-		!park.basketball &&
-		!park.field &&
-		!park.tennis &&
-		!park.pavilion &&
-		!park.pool &&
-		!park.dog &&
-		!park.skate &&
-		park.Classification !== 'Nature Preserve' &&
-		park.Classification !== 'Greenspot' && park.Classification !== 'Playlot'
-	) {
-		incomplete = true
-	}
+	// if (
+	// 	!park.play &&
+	// 	!park.basketball &&
+	// 	!park.field &&
+	// 	!park.tennis &&
+	// 	!park.pavilion &&
+	// 	!park.pool &&
+	// 	!park.dog &&
+	// 	!park.skate &&
+	// 	park.Classification !== 'Nature Preserve' &&
+	// 	park.Classification !== 'Greenspot' && park.Classification !== 'Playlot'
+	// ) {
+	// 	incomplete = true
+	// }
 
 	if (
 		!park.description &&

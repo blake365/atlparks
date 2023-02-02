@@ -81,188 +81,188 @@ function DrawerContents({ selected }) {
 	}
 
 	return (
-		<form
-			onSubmit={editform.onSubmit((values) => submitForm(values))}
-			className='overflow-y-scroll'
-		>
-			<TextInput
-				label='Park Name'
-				placeholder={selected?.Name}
-				{...editform.getInputProps('Name')}
-				size='xs'
-			/>
-			<TextInput
-				label='Address'
-				placeholder={selected?.Address}
-				{...editform.getInputProps('Address')}
-				size='xs'
-			/>
-			<NumberInput
-				label='Acreage'
-				placeholder={selected?.Acreage}
-				{...editform.getInputProps('Acreage')}
-				size='xs'
-				precision={2}
-			/>
-			<Select
-				data={[
-					'Nature Preserve',
-					'Regional',
-					'Neighborhood',
-					'Community',
-					'Playlot',
-					'Greenspot',
-					'Trail',
-					'Plaza',
-					'Park in Holding',
-				]}
-				placeholder={selected?.Classification}
-				label='Classification'
-				{...editform.getInputProps('Classification')}
-				clearable
-				size='xs'
-			/>
-			<Select
-				data={[
-					'A',
-					'B',
-					'C',
-					'D',
-					'E',
-					'F',
-					'G',
-					'H',
-					'I',
-					'J',
-					'K',
-					'L',
-					'M',
-					'N',
-					'O',
-					'P',
-					'Q',
-					'R',
-					'S',
-					'T',
-					'V',
-					'W',
-					'X',
-					'Y',
-					'Z',
-				]}
-				placeholder={selected?.NPU}
-				label='Neighborhood Planning Unit'
-				{...editform.getInputProps('NPU')}
-				clearable
-				size='xs'
-			/>
-			<Select
-				data={['1', '2', '3', '4', '5', '6', '7', '8', '9', '10', '11', '12']}
-				placeholder={selected?.Council_District}
-				label='City Council District'
-				{...editform.getInputProps('Council_District')}
-				clearable
-				size='xs'
-			/>
-			<NumberInput
-				label='Zip Code'
-				placeholder={selected?.Zip_Code}
-				{...editform.getInputProps('Zip_Code')}
-				size='xs'
-			/>
-			<NumberInput
-				label='Latitude'
-				placeholder={selected?.latitude}
-				{...editform.getInputProps('latitude')}
-				size='xs'
-				precision={6}
-			/>
-			<NumberInput
-				label='Longitude'
-				placeholder={selected?.longitude}
-				{...editform.getInputProps('longitude')}
-				size='xs'
-				precision={6}
-			/>
-			<div></div>
-			<div className='flex flex-row flex-wrap p-2 justify-evenly'>
-				<Checkbox
-					label='Playground'
-					{...editform.getInputProps('Playground', { type: 'checkbox' })}
+		<form onSubmit={editform.onSubmit((values) => submitForm(values))}>
+			<div className='h-screen pb-20 overflow-y-scroll'>
+				<TextInput
+					label='Park Name'
+					placeholder={selected?.Name}
+					{...editform.getInputProps('Name')}
 					size='xs'
-					checked={selected?.Playground}
+				/>
+				<TextInput
+					label='Address'
+					placeholder={selected?.Address}
+					{...editform.getInputProps('Address')}
+					size='xs'
+				/>
+				<NumberInput
+					label='Acreage'
+					placeholder={selected?.Acreage}
+					{...editform.getInputProps('Acreage')}
+					size='xs'
+					precision={2}
+				/>
+				<Select
+					data={[
+						'Nature Preserve',
+						'Regional',
+						'Neighborhood',
+						'Community',
+						'Playlot',
+						'Greenspot',
+						'Trail',
+						'Plaza',
+						'Park in Holding',
+					]}
+					placeholder={selected?.Classification}
+					label='Classification'
+					{...editform.getInputProps('Classification')}
+					clearable
+					size='xs'
+				/>
+				<Select
+					data={[
+						'A',
+						'B',
+						'C',
+						'D',
+						'E',
+						'F',
+						'G',
+						'H',
+						'I',
+						'J',
+						'K',
+						'L',
+						'M',
+						'N',
+						'O',
+						'P',
+						'Q',
+						'R',
+						'S',
+						'T',
+						'V',
+						'W',
+						'X',
+						'Y',
+						'Z',
+					]}
+					placeholder={selected?.NPU}
+					label='Neighborhood Planning Unit'
+					{...editform.getInputProps('NPU')}
+					clearable
+					size='xs'
+				/>
+				<Select
+					data={['1', '2', '3', '4', '5', '6', '7', '8', '9', '10', '11', '12']}
+					placeholder={selected?.Council_District}
+					label='City Council District'
+					{...editform.getInputProps('Council_District')}
+					clearable
+					size='xs'
+				/>
+				<NumberInput
+					label='Zip Code'
+					placeholder={selected?.Zip_Code}
+					{...editform.getInputProps('Zip_Code')}
+					size='xs'
+				/>
+				<NumberInput
+					label='Latitude'
+					placeholder={selected?.latitude}
+					{...editform.getInputProps('latitude')}
+					size='xs'
+					precision={6}
+				/>
+				<NumberInput
+					label='Longitude'
+					placeholder={selected?.longitude}
+					{...editform.getInputProps('longitude')}
+					size='xs'
+					precision={6}
+				/>
+				<div></div>
+				<div className='flex flex-row flex-wrap p-2 justify-evenly'>
+					<Checkbox
+						label='Playground'
+						{...editform.getInputProps('Playground', { type: 'checkbox' })}
+						size='xs'
+						checked={selected?.Playground}
+					/>
+					<Checkbox
+						label='Fields'
+						{...editform.getInputProps('Fields', { type: 'checkbox' })}
+						size='xs'
+						checked={selected?.Fields}
+					/>
+					<Checkbox
+						label='Basketball'
+						{...editform.getInputProps('Basketball', { type: 'checkbox' })}
+						size='xs'
+						checked={selected?.Basketball}
+					/>
+					<Checkbox
+						label='Tennis'
+						{...editform.getInputProps('Tennis', { type: 'checkbox' })}
+						size='xs'
+						checked={selected?.Tennis}
+					/>
+					<Checkbox
+						label='Pavilion'
+						{...editform.getInputProps('Pavilion', { type: 'checkbox' })}
+						size='xs'
+						checked={selected?.Pavilion}
+					/>
+					<Checkbox
+						label='Pool / Splash Pad'
+						{...editform.getInputProps('Splash_pad', { type: 'checkbox' })}
+						size='xs'
+						checked={selected?.Splash_pad}
+					/>
+					<Checkbox
+						label='Dog Park'
+						{...editform.getInputProps('Dog_park', { type: 'checkbox' })}
+						size='xs'
+						checked={selected?.Dog_park}
+					/>
+					<Checkbox
+						label='Skate Park'
+						{...editform.getInputProps('Skate_park', { type: 'checkbox' })}
+						size='xs'
+						checked={selected?.Skate_park}
+					/>
+				</div>
+				<Textarea
+					label='Description'
+					placeholder={selected?.description}
+					{...editform.getInputProps('description')}
+					size='xs'
+					autosize
+				/>
+				<TextInput
+					label='Website Address'
+					placeholder={selected?.website}
+					{...editform.getInputProps('website')}
+					size='xs'
 				/>
 				<Checkbox
-					label='Fields'
-					{...editform.getInputProps('Fields', { type: 'checkbox' })}
+					mt='md'
+					label='Favorite'
+					description='(Shows on Home Page)'
+					{...editform.getInputProps('favorite', { type: 'checkbox' })}
 					size='xs'
-					checked={selected?.Fields}
+					checked={selected.favorite}
 				/>
-				<Checkbox
-					label='Basketball'
-					{...editform.getInputProps('Basketball', { type: 'checkbox' })}
-					size='xs'
-					checked={selected?.Basketball}
-				/>
-				<Checkbox
-					label='Tennis'
-					{...editform.getInputProps('Tennis', { type: 'checkbox' })}
-					size='xs'
-					checked={selected?.Tennis}
-				/>
-				<Checkbox
-					label='Pavilion'
-					{...editform.getInputProps('Pavilion', { type: 'checkbox' })}
-					size='xs'
-					checked={selected?.Pavilion}
-				/>
-				<Checkbox
-					label='Pool / Splash Pad'
-					{...editform.getInputProps('Splash_pad', { type: 'checkbox' })}
-					size='xs'
-					checked={selected?.Splash_pad}
-				/>
-				<Checkbox
-					label='Dog Park'
-					{...editform.getInputProps('Dog_park', { type: 'checkbox' })}
-					size='xs'
-					checked={selected?.Dog_park}
-				/>
-				<Checkbox
-					label='Skate Park'
-					{...editform.getInputProps('Skate_park', { type: 'checkbox' })}
-					size='xs'
-					checked={selected?.Skate_park}
-				/>
-			</div>
-			<Textarea
-				label='Description'
-				placeholder={selected?.description}
-				{...editform.getInputProps('description')}
-				size='xs'
-			/>
-			<TextInput
-				label='Website Address'
-				placeholder={selected?.website}
-				{...editform.getInputProps('website')}
-				size='xs'
-			/>
-			<Checkbox
-				mt='md'
-				label='Favorite'
-				description='(Shows on Home Page)'
-				{...editform.getInputProps('favorite', { type: 'checkbox' })}
-				size='xs'
-				checked={selected.favorite}
-			/>
-			<div className='flex flex-row justify-center '>
-				<Button
-					className='w-auto px-2 my-2 text-white bg-blue-500 rounded-md hover:bg-blue-600'
-					type='submit'
-					loading={loading}
-				>
-					Submit
-				</Button>
+				<div className='flex flex-row justify-center '>
+					<Button
+						className='w-auto px-2 my-2 text-white bg-blue-500 rounded-md hover:bg-blue-600'
+						type='submit'
+						loading={loading}
+					>
+						Submit
+					</Button>
+				</div>
 			</div>
 		</form>
 	)
