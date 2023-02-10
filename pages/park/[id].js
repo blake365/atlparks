@@ -33,7 +33,6 @@ import { supabase } from '../../config/config'
 import { useRouter } from 'next/router'
 
 import parkPicture from '../../public/placeholder.png'
-import Card from '../../components/card'
 import Marker from '../../components/marker'
 
 import { Classifications } from '../../config/classifications'

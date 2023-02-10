@@ -4,6 +4,9 @@ import { iconPicker } from '../utils/functions'
 import parkPicture from '../public/placeholder.png'
 
 import { setColor } from '../utils/functions'
+import { useEffect, useState } from 'react'
+
+import { supabase } from '../config/config'
 
 import Image from 'next/image'
 import Link from 'next/link'
@@ -32,6 +35,25 @@ export function NewCard({ park }) {
 		{ name: 'tennis', status: park.Tennis, icon: 'GiTennisBall' },
 	]
 
+	const [picture, setPicture] = useState([])
+
+	useEffect(() => {
+		const fetchPicture = async () => {
+			let { data: picture, errors } = await supabase
+				.from('pictures')
+				.select()
+				.eq('park_id', parseInt(park.ID))
+				.limit(1)
+			console.log(errors)
+			return picture
+		}
+		// fetchpicture()
+		fetchPicture().then((data) => {
+			// console.log(data)
+			setPicture(data[0]?.url)
+		})
+	}, [park.ID])
+
 	const color = setColor(park)
 
 	return (
@@ -45,7 +67,16 @@ export function NewCard({ park }) {
 				radius='sm'
 			>
 				<Card.Section className='relative'>
-					<Image src={parkPicture} alt={park.Name} height={200} width={288} />
+					<Image
+						src={picture ? picture : parkPicture}
+						alt={park.Name}
+						height={200}
+						width={288}
+						style={{
+							height: '200px',
+							objectFit: 'cover',
+						}}
+					/>
 					<Badge
 						color={color}
 						variant='light'

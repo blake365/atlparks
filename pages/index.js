@@ -1,14 +1,8 @@
 import Head from 'next/head'
-import { useRouter } from 'next/router'
-
-import GMap from '../components/map'
-import Marker from '../components/marker'
-import { Wrapper } from '@googlemaps/react-wrapper'
 
 import { Title } from '@mantine/core'
 
 import { supabase } from '../config/config'
-import { useEffect, useState } from 'react'
 import { HeroContentLeft } from '../components/hero'
 import { NewCard } from '../components/newcard'
 
@@ -55,49 +49,6 @@ export default function Home({ parks }) {
 						return <NewCard park={park} key={park.ID} />
 					})}
 				</div>
-				{/* <div>Map of all ATL park locations?</div> */}
-				{/* <Paper
-					shadow='lg'
-					radius='md'
-					m='md'
-					withBorder
-					style={{
-						display: 'flex',
-						height: '500px',
-						width: '90%',
-						maxWidth: '960px',
-					}}
-				>
-					<Wrapper apiKey={process.env.NEXT_PUBLIC_MAPSAPI} render={render}>
-						<GMap
-							center={{ lat: 33.755499, lng: -84.386421 }}
-							zoom={12}
-							style={{
-								height: '100%',
-								flexGrow: 1,
-								borderRadius: 10,
-							}}
-						>
-							{parks.map((park) => {
-								if (park.latitude && park.longitude) {
-									// console.log(park)
-									return (
-										<Marker
-											position={{ lat: park.latitude, lng: park.longitude }}
-											title={park.Name}
-											key={park.ID}
-											// onClick={(e) => alert(e.target.value)}
-											// onClick={() => {
-											// 	console.log(park.ID)
-											// 	return router.push(`/park/${park.ID}`)
-											// }}
-										/>
-									)
-								}
-							})}
-						</GMap>
-					</Wrapper>
-				</Paper> */}
 			</main>
 		</div>
 	)
