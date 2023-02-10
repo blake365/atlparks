@@ -42,23 +42,18 @@ import SubmitFeedback from '../../components/submitfeedback'
 
 const useStyles = createStyles((theme) => ({
 	inner: {
-		display: 'flex',
-		justifyContent: 'space-between',
+		// display: 'flex',
+		// justifyContent: 'space-between',
 		paddingTop: theme.spacing.xl * 1,
 		// paddingBottom: theme.spacing.xl * 1,
-		[theme.fn.smallerThan('md')]: {
-			flexDirection: 'column-reverse',
-		},
+		// [theme.fn.smallerThan('md')]: {
+		// 	flexDirection: 'column-reverse',
+		// },
 	},
 
 	content: {
-		maxWidth: 480,
-		marginRight: theme.spacing.xl * 3,
-
-		[theme.fn.smallerThan('md')]: {
-			maxWidth: '100%',
-			margin: 'auto',
-		},
+		maxWidth: '100%',
+		margin: 'auto',
 	},
 
 	title: {
@@ -74,9 +69,8 @@ const useStyles = createStyles((theme) => ({
 
 	image: {
 		flex: 1,
-		maxWidth: 500,
-		maxHeight: '100%',
 		margin: 'auto',
+		marginBottom: '1rem',
 	},
 
 	pages: {
@@ -334,13 +328,17 @@ const Park = ({ parkData, pictures }) => {
 		}
 	}
 
+	const pageTitle = `${park?.Name} in Atlanta, Georgia`
+
 	return (
 		<div>
 			{park && features && color ? (
 				<div className='pt-0 pb-8 mb-14'>
 					<Head>
-						<title>{park.Name} in Atlanta, Georgia</title>
+						<title>{pageTitle}</title>
 						<meta name='description' content={park?.description} />
+						<meta property='og:title' content={pageTitle} />
+						<meta property='og:description' content={park?.description} />
 					</Head>
 					<Box mt='lg'>
 						<Container>
@@ -411,6 +409,25 @@ const Park = ({ parkData, pictures }) => {
 							</div>
 							<div className={classes.inner}>
 								<div className={classes.content}>
+									{pictures.length > 0 ? (
+										<Image
+											src={pictures[0].url}
+											alt={pictures[0].description}
+											className={classes.image}
+											width={700}
+											height={800}
+											priority
+										/>
+									) : (
+										<Image
+											src={parkPicture}
+											alt='default'
+											className={classes.image}
+											width={300}
+											height={800}
+											priority
+										/>
+									)}
 									<Group position='center' spacing='sm' align='center'>
 										<Paper
 											shadow='sm'
@@ -500,49 +517,36 @@ const Park = ({ parkData, pictures }) => {
 										)}
 									</Group>
 								</div>
-								{pictures.length > 0 ? (
-									<Image
-										src={pictures[0].url}
-										alt={pictures[0].description}
-										className={classes.image}
-										width={300}
-										height={800}
-										priority
-									/>
-								) : (
-									<Image
-										src={parkPicture}
-										alt='default'
-										className={classes.image}
-										width={300}
-										height={800}
-										priority
-									/>
-								)}
 							</div>
 
 							<SubmitFeedback id={park.ID} />
 
 							{pictures.length > 1 && (
 								<Text color='' size='xl' fw='bold'>
-									Photo Gallery
+									Photos
 								</Text>
 							)}
-							<Spoiler maxHeight={300} showLabel='Show more' hideLabel='Hide'>
-								<Group>
-									{pictures.map((image) => {
+
+							<Group
+								className='flex justify-center mx-auto my-4'
+								spacing='sm'
+								position='center'
+							>
+								{pictures.map((image, index) => {
+									if (index !== 0) {
 										return (
 											<Image
 												src={image.url}
 												alt='default'
-												width={300}
+												width={310}
 												height={300}
 												key={image.id}
 											/>
 										)
-									})}
-								</Group>
-							</Spoiler>
+									}
+								})}
+							</Group>
+
 							<Paper
 								shadow='lg'
 								radius='md'
