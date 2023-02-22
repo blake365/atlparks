@@ -1,4 +1,4 @@
-import { Stack, Text, Card, Container } from '@mantine/core'
+import { Stack, Text, Card, Container, Title } from '@mantine/core'
 import Link from 'next/link'
 import { supabase } from '../../config/config'
 import { useEffect, useState } from 'react'
@@ -42,12 +42,11 @@ export default function Dashboard() {
 			<Container size='xl'>
 				{user ? (
 					<Stack>
-						<Text>Admin Dashboard</Text>
 						<ParkTable />
 						<Feedback />
 					</Stack>
 				) : (
-					<Text>You must log in to access this page</Text>
+					<Text>You must be an admin and log in to access this page</Text>
 				)}
 			</Container>
 		</div>

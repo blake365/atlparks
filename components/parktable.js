@@ -21,6 +21,7 @@ import DrawerContents from './drawercontents'
 import { incompleteCheck } from '../utils/functions.jsx'
 import Link from 'next/link'
 import PhotoDrawer from './drawerphoto'
+import DrawerNew from './drawernew'
 
 const useStyles = createStyles((theme) => ({
 	header: {
@@ -82,24 +83,24 @@ export default function ParkTable() {
 
 	// const [status, setStatus] = useState('')
 
-	useEffect(() => {
-		const fetchParks = async () => {
-			const { data, error } = await supabase
-				.from('parks')
-				.select('*')
-				.order('ID', { ascending: true })
-			// console.log(data)
-			if (error) {
-				console.error(error)
-			}
+	// useEffect(() => {
+	// 	const fetchParks = async () => {
+	// 		const { data, error } = await supabase
+	// 			.from('parks')
+	// 			.select('*')
+	// 			.order('ID', { ascending: true })
+	// 		// console.log(data)
+	// 		if (error) {
+	// 			console.error(error)
+	// 		}
 
-			return data
-		}
+	// 		return data
+	// 	}
 
-		fetchParks().then((data) => {
-			setParks(data)
-		})
-	}, [])
+	// 	fetchParks().then((data) => {
+	// 		setParks(data)
+	// 	})
+	// }, [])
 
 	const submitForm = async (values) => {
 		setLoading(true)
@@ -208,13 +209,15 @@ export default function ParkTable() {
 			<Drawer
 				opened={opened}
 				onClose={() => setOpened(false)}
-				title={`Edit ${selected?.Name}`}
+				title={selected ? `Edit ${selected?.Name}` : 'Add A New Park'}
 				padding='xl'
 				size='xl'
 				position='right'
 			>
 				{drawerType === 'edit' ? (
 					<DrawerContents selected={selected} />
+				) : drawerType === 'new' ? (
+					<DrawerNew />
 				) : (
 					<PhotoDrawer selected={selected} />
 				)}
@@ -344,9 +347,20 @@ export default function ParkTable() {
 						<Button type='submit' loading={loading} mt='sm'>
 							Filter / Refresh
 						</Button>
+						<Button
+							color='green'
+							mx='sm'
+							onClick={() => {
+								setDrawerType('new')
+								setOpened(true)
+							}}
+						>
+							Add Park
+						</Button>
 					</div>
 				</form>
 			</div>
+
 			<ScrollArea
 				sx={{ minHeight: 300, height: 700 }}
 				onScrollPositionChange={({ y }) => setScrolled(y !== 0)}
