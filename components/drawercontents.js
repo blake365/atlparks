@@ -11,6 +11,11 @@ import { supabase } from '../config/config'
 
 import { useForm } from '@mantine/form'
 import { useState } from 'react'
+import {
+	formClassifications,
+	formDistricts,
+	formNpus,
+} from '../config/formitems'
 
 function DrawerContents({ selected }) {
 	const [loading, setLoading] = useState(false)
@@ -103,17 +108,7 @@ function DrawerContents({ selected }) {
 					precision={2}
 				/>
 				<Select
-					data={[
-						'Nature Preserve',
-						'Regional',
-						'Neighborhood',
-						'Community',
-						'Playlot',
-						'Greenspot',
-						'Trail',
-						'Plaza',
-						'Park in Holding',
-					]}
+					data={formClassifications}
 					placeholder={selected?.Classification}
 					label='Classification'
 					{...editform.getInputProps('Classification')}
@@ -121,33 +116,7 @@ function DrawerContents({ selected }) {
 					size='xs'
 				/>
 				<Select
-					data={[
-						'A',
-						'B',
-						'C',
-						'D',
-						'E',
-						'F',
-						'G',
-						'H',
-						'I',
-						'J',
-						'K',
-						'L',
-						'M',
-						'N',
-						'O',
-						'P',
-						'Q',
-						'R',
-						'S',
-						'T',
-						'V',
-						'W',
-						'X',
-						'Y',
-						'Z',
-					]}
+					data={formNpus}
 					placeholder={selected?.NPU}
 					label='Neighborhood Planning Unit'
 					{...editform.getInputProps('NPU')}
@@ -155,7 +124,7 @@ function DrawerContents({ selected }) {
 					size='xs'
 				/>
 				<Select
-					data={['1', '2', '3', '4', '5', '6', '7', '8', '9', '10', '11', '12']}
+					data={formDistricts}
 					placeholder={selected?.Council_District}
 					label='City Council District'
 					{...editform.getInputProps('Council_District')}

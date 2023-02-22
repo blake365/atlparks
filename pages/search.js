@@ -12,12 +12,18 @@ import {
 	NumberInput,
 	Group,
 	Alert,
+	Divider,
 } from '@mantine/core'
 
 import { IconLocation } from '@tabler/icons'
 import { supabase } from '../config/config'
 import { NewCard } from '../components/newcard'
 import Head from 'next/head'
+import {
+	formClassifications,
+	formDistricts,
+	formNpus,
+} from '../config/formitems'
 
 function addSeparator(str) {
 	return str.split(' ').join(' | ')
@@ -228,6 +234,7 @@ const Search = () => {
 								Near Me
 							</Button>
 						</Group>
+						<Divider my='sm' />
 						<TextInput
 							label='Park Name'
 							placeholder=''
@@ -247,53 +254,14 @@ const Search = () => {
 							size='xs'
 						/>
 						<Select
-							data={[
-								'A',
-								'B',
-								'C',
-								'D',
-								'E',
-								'F',
-								'G',
-								'H',
-								'I',
-								'J',
-								'K',
-								'L',
-								'M',
-								'N',
-								'O',
-								'P',
-								'Q',
-								'R',
-								'S',
-								'T',
-								'V',
-								'W',
-								'X',
-								'Y',
-								'Z',
-							]}
+							data={formNpus}
 							label='Neighborhood Planning Unit'
 							{...form.getInputProps('npu')}
 							clearable
 							size='xs'
 						/>
 						<Select
-							data={[
-								'1',
-								'2',
-								'3',
-								'4',
-								'5',
-								'6',
-								'7',
-								'8',
-								'9',
-								'10',
-								'11',
-								'12',
-							]}
+							data={formDistricts}
 							label='City Council District'
 							description=''
 							{...form.getInputProps('district')}
@@ -301,17 +269,7 @@ const Search = () => {
 							size='xs'
 						/>
 						<MultiSelect
-							data={[
-								'Nature Preserve',
-								'Regional',
-								'Neighborhood',
-								'Community',
-								'Playlot',
-								'Greenspot',
-								'Trail',
-								'Plaza',
-								'Park in Holding',
-							]}
+							data={formClassifications}
 							label='Park Classification'
 							description=''
 							{...form.getInputProps('classification')}

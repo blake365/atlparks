@@ -22,6 +22,11 @@ import { incompleteCheck } from '../utils/functions.jsx'
 import Link from 'next/link'
 import PhotoDrawer from './drawerphoto'
 import DrawerNew from './drawernew'
+import {
+	formClassifications,
+	formDistricts,
+	formNpus,
+} from '../config/formitems'
 
 const useStyles = createStyles((theme) => ({
 	header: {
@@ -153,6 +158,22 @@ export default function ParkTable() {
 		setLoading(false)
 	}
 
+	const updateLocations = async () => {
+		setLoading(true)
+		const { error } = await supabase.rpc('set_location_func')
+		// console.log(data)
+		console.log(error)
+		setLoading(false)
+	}
+
+	const updateAlphabetical = async () => {
+		setLoading(true)
+		const { error } = await supabase.rpc('alphabetical_sort')
+		// console.log(data)
+		console.log(error)
+		setLoading(false)
+	}
+
 	const rows = parks.map((row) => (
 		<tr key={row.ID}>
 			<td className='flex items-center h-full space-x-2 align-middle'>
@@ -228,53 +249,14 @@ export default function ParkTable() {
 					<div className='flex flex-col'>
 						<div className='flex flex-row justify-start flex-shrink space-x-2'>
 							<Select
-								data={[
-									'A',
-									'B',
-									'C',
-									'D',
-									'E',
-									'F',
-									'G',
-									'H',
-									'I',
-									'J',
-									'K',
-									'L',
-									'M',
-									'N',
-									'O',
-									'P',
-									'Q',
-									'R',
-									'S',
-									'T',
-									'V',
-									'W',
-									'X',
-									'Y',
-									'Z',
-								]}
+								data={formNpus}
 								label='Neighborhood Planning Unit'
 								{...form.getInputProps('npu')}
 								clearable
 								size='xs'
 							/>
 							<Select
-								data={[
-									'1',
-									'2',
-									'3',
-									'4',
-									'5',
-									'6',
-									'7',
-									'8',
-									'9',
-									'10',
-									'11',
-									'12',
-								]}
+								data={formDistricts}
 								label='City Council District'
 								description=''
 								{...form.getInputProps('district')}
@@ -282,17 +264,7 @@ export default function ParkTable() {
 								size='xs'
 							/>
 							<MultiSelect
-								data={[
-									'Nature Preserve',
-									'Regional',
-									'Neighborhood',
-									'Community',
-									'Playlot',
-									'Greenspot',
-									'Trail',
-									'Plaza',
-									'Park in Holding',
-								]}
+								data={formClassifications}
 								label='Park Classification'
 								description=''
 								{...form.getInputProps('classification')}
@@ -356,6 +328,26 @@ export default function ParkTable() {
 							}}
 						>
 							Add Park
+						</Button>
+						<Button
+							color='orange'
+							mx='sm'
+							onClick={() => {
+								updateLocations()
+							}}
+							loading={loading}
+						>
+							SQL:Update Locations
+						</Button>
+						<Button
+							color='orange'
+							mx='sm'
+							onClick={() => {
+								updateAlphabetical()
+							}}
+							loading={loading}
+						>
+							SQL:Update Alphabetical List
 						</Button>
 					</div>
 				</form>
