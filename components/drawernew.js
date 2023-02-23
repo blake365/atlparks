@@ -17,6 +17,9 @@ import {
 	formNpus,
 } from '../config/formitems'
 
+// TODO:
+// also create associated row in likes table, could be tricky...
+
 function DrawerNew() {
 	const [loading, setLoading] = useState(false)
 
@@ -76,9 +79,18 @@ function DrawerNew() {
 			})
 			.select()
 
+		const { status1, error1 } = await supabase.from('likes').insert({
+			Name: data[0].Name,
+			ID: data[0].ID,
+			likes: 0,
+		})
+
 		console.log(error)
-		console.log(status)
-		console.log(data)
+		// console.log(status)
+		// console.log(data)
+		console.log(status1)
+		console.log(error1)
+
 		setLoading(false)
 	}
 
@@ -95,6 +107,7 @@ function DrawerNew() {
 					placeholder={editform.Name}
 					{...editform.getInputProps('Name')}
 					size='xs'
+					required
 				/>
 				<TextInput
 					label='Address'

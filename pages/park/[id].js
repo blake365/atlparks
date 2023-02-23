@@ -373,6 +373,7 @@ const Park = ({ parkData, pictures }) => {
 									href={`/park/${park.ID + 1}`}
 									variant='default'
 									rightIcon={<IconArrowRight size={18} />}
+									// TODO: function to find highest ID at the time
 									disabled={park.ID > 496}
 									px='xs'
 									w='110px'
