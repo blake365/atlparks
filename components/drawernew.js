@@ -18,7 +18,7 @@ import {
 } from '../config/formitems'
 
 // TODO:
-// also create associated row in likes table, could be tricky...
+// add fields for city and county
 
 function DrawerNew() {
 	const [loading, setLoading] = useState(false)

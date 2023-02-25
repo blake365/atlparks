@@ -19,4 +19,8 @@ export const Classifications = {
 		'This classification covers a broad range of parks and recreation facilities oriented toward single/unique purposes that do not fall into other classification categories such as a nature center, historic site, event space, etc...',
 	Holding:
 		'This classification describes parcels/lots of land that Parks and Recreation owns whose classification may not have been determined at the current time, or that have either been decommissioned for the time being as a City of Atlanta Park maintained on a 10-Day cycle, or have yet to be commissioned as a City of Atlanta Park. Parks-in-holding are not classified by size.',
+	Private:
+		'Private parks are parks not run by the city of Atlanta or state of Georgia. They may be subject to other rules or maintenance schedules not applicable to other Atlanta city parks.',
+	'National Park':
+		"A national park is a natural park in use for conservation purposes, created and protected by national governments. Often it is a reserve of natural, semi-natural, or developed land that a sovereign state declares or owns. Although individual nations designate their own national parks differently, there is a common idea: the conservation of 'wild nature' for posterity and as a symbol of national pride.",
 }

@@ -38,6 +38,7 @@ import Marker from '../../components/marker'
 import { Classifications } from '../../config/classifications'
 import { NewCard } from '../../components/newcard'
 import SubmitFeedback from '../../components/submitfeedback'
+import { setColor } from '../../utils/functions'
 
 const useStyles = createStyles((theme) => ({
 	inner: {
@@ -174,46 +175,6 @@ const processClass = (string) => {
 	} else {
 		return ''
 	}
-}
-
-const setColor = (data) => {
-	let color
-	switch (data.Classification) {
-		case 'Regional':
-			color = 'orange'
-			break
-		case 'Community':
-			color = 'teal'
-			break
-		case 'Neighborhood':
-			color = 'blue'
-			break
-		case 'Greenspot':
-			color = 'green'
-			break
-		case 'Nature Preserve':
-			color = 'lime'
-			break
-		case 'Playlot':
-			color = 'violet'
-			break
-		case 'Park in Holding':
-			color = 'yellow'
-			break
-		case 'Special Facility':
-			color = 'gray'
-			break
-		case 'Plaza':
-			color = 'indigo'
-			break
-		case 'Trail':
-			color = 'lime'
-			break
-		default:
-			color = 'white'
-	}
-
-	return color
 }
 
 const setZoom = (acres) => {

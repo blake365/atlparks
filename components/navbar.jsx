@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
-import { createStyles, Header, Container, Group, Burger, Paper, Transition, Text } from '@mantine/core';
+import { createStyles, Header, Container, Group, Burger, Paper, Transition, Text, Button } from '@mantine/core';
 import { useDisclosure } from '@mantine/hooks';
 import { supabase } from '../config/config'
 
@@ -140,6 +140,7 @@ export function HeaderResponsive({ links })
                 </Link>
                 <Group spacing={5} className={classes.links}>
                     {items}
+                    {user ? (<Button variant='outline' color='red' onClick={async () => { let { error } = await supabase.auth.signOut() }}>Logout</Button>) : ('')}
                 </Group>
 
                 <Burger opened={opened} onClick={toggle} className={classes.burger} size="sm" />

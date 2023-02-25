@@ -42,10 +42,10 @@ export const setColor = (data) =>
 			color = 'blue'
 			break
 		case 'Greenspot':
-			color = 'green'
+			color = 'lime'
 			break
 		case 'Nature Preserve':
-			color = 'lime'
+			color = 'green'
 			break
 		case 'Playlot':
 			color = 'violet'
@@ -60,10 +60,16 @@ export const setColor = (data) =>
 			color = 'indigo'
 			break
 		case 'Trail':
-			color = 'lime'
+			color = 'green'
+			break
+		case 'Private':
+			color = 'red'
+			break
+		case 'National Park':
+			color = 'green'
 			break
 		default:
-			color = 'white'
+			color = 'black'
 	}
 
 	return color

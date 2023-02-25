@@ -84,7 +84,7 @@ const Search = () => {
 		let query = supabase
 			.from('parks')
 			.select('*')
-			.order('ID', { ascending: true })
+			.order('alphabetical_order', { ascending: true })
 
 		if (filterByName) {
 			query = query.textSearch('Name', filterByName)
