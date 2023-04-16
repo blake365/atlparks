@@ -84,11 +84,13 @@ export async function getStaticPaths() {
 
 	// console.log(parks)
 
+	const paths = parks.map((park) => ({
+		params: { id: park.toString() },
+	}))
+
 	return {
-		paths: parks.map((park) => ({
-			params: { id: park.toString() },
-		})),
-		fallback: true,
+		paths: paths,
+		fallback: 'blocking',
 	}
 }
 
@@ -100,6 +102,11 @@ export async function getStaticProps({ params }) {
 		.eq('ID', params.id)
 
 	// console.log(typeof params.id)
+	if (!parkData) {
+		return {
+			notFound: true,
+		}
+	}
 
 	// console.log(error)
 	let { data: pictures, errors } = await supabase
@@ -112,6 +119,7 @@ export async function getStaticProps({ params }) {
 			parkData,
 			pictures,
 		},
+		revalidate: 86400, // In seconds
 	}
 }
 
