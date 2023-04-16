@@ -1,8 +1,9 @@
 const handler = async (req, res) => {
+	console.log(req.body)
 	await res.revalidate('/')
 
 	const pathToRevalidate = `/${
-		req.body?.record?.id || req.body?.old_record?.id
+		req.body?.record?.ID || req.body?.old_record?.ID
 	}`
 	await res.revalidate(pathToRevalidate)
 
